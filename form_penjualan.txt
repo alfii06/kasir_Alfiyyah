@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+                    <html lang="en">
+
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>Data Penjualan Barang</title>
+                        <style>
+                            table {
+                                width: 100%;
+                                border-collapse: collapse;
+                                margin-top: 20px;
+                            }
+
+                            th,
+                            td {
+                                border: 1px solid #ddd;
+                                padding: 8px;
+                                text-align: left;
+                                color: #000;
+                            }
+
+                            th {
+                                background-color: #f2f2f2;
+                            }
+
+                            button {
+                                padding: 5px 10px;
+                                margin-right: 5px;
+                            }
+
+                            /* Perubahan pada input-field */
+                            .input-field {
+                                margin-bottom: 10px;
+                            }
+
+                            .input-field label {
+                                display: block;
+                                margin-bottom: 5px;
+                                font-weight: bold; /* Menambahkan ketebalan pada label */
+                            }
+
+                            .input-field input,
+                            .input-field select {
+                                width: calc(100% - 22px); /* Mengatur lebar input */
+                                padding: 5px;
+                                border: 1px solid #ccc;
+                                border-radius: 5px;
+                                margin-top: 5px; /* Menambahkan jarak antara input dan label */
+                            }
+
+                            /* Button */
+                            .input-field button {
+                                width: 100%;
+                                background-color: #4CAF50;
+                                color: white;
+                                border: none;
+                                padding: 10px;
+                                border-radius: 5px;
+                                cursor: pointer;
+                            }
+                        </style>
+                    </head>
+
+                    <body>
+
+                        <h2>Tambah Penjualan</h2>
+
+                        <!-- Tombol untuk menampilkan form tambah penjualan -->
+                        <a href="../admin/tambah_penjualan.php"><button onclick="tambahPenjualan()" class='btn btn-primary'>Tambah Penjualan</button></a>
+
+                        <!-- Tabel Penjualan -->
+                        <table id="tabelPenjualan">
+                            <tr>
+                                <th>Penjualan ID</th>
+                                <th>Nama Toko</th>
+                                <th>User</th>
+                                <th>Tanggal Penjualan</th>
+                                <th>Pelanggan</th>
+                                <th>Total</th>
+                                <th>Bayar</th>
+                                <th>Sisa</th>
+                                <th>Keterangan</th>
+                                <th>Aksi</th>
+                            </tr>
+                            <!-- Dynamic data for penjualan -->
+                            <?php
+                            include 'koneksi.php';
+
+                            $sql = "SELECT penjualan.*, toko.nama_toko AS nama_toko, user.nama_lengkap AS nama_user, pelanggan.nama_pelanggan, penjualan_detail.qty AS jumlah_barang, produk.nama_produk AS nama_produk FROM penjualan
+                                    INNER JOIN toko ON penjualan.toko_id = toko.toko_id
+                                    INNER JOIN user ON penjualan.user_id = user.user_id
+                                    INNER JOIN pelanggan ON penjualan.pelanggan = pelanggan.pelanggan_id
+                                    INNER JOIN penjualan_detail ON penjualan.penjualan_id = penjualan_detail.penjualan_id
+                                    INNER JOIN produk ON penjualan_detail.produk_id = produk.produk_id";
+
+                            $result = $conn->query($sql);
+                            if ($result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) {
+                                    echo "<tr>";
+                                    echo "<td>" . $row["penjualan_id"] . "</td>";
+                                    echo "<td>" . $row["nama_toko"] . "</td>";
+                                    echo "<td>" . $row["nama_user"] . "</td>";
+                                    echo "<td>" . $row["tanggal_penjualan"] . "</td>";
+                                    echo "<td>" . $row["nama_pelanggan"] . "</td>";
+                                    echo "<td>" . $row["total"] . "</td>";
+                                    echo "<td>" . $row["bayar"] . "</td>";
+                                    echo "<td>" . $row["sisa"] . "</td>";
+                                    echo "<td>" . $row["keterangan"] . "</td>";
+                                    echo "<td>
+                                            <a href='edit_penjualan_barang.php?id=" . $row["penjualan_id"] . "' class='btn btn-success btn-sm'>Edit</a>
+                                            <a href='hapus_penjualan.php?id=" . $row["penjualan_id"] . "' class='btn btn-danger btn-sm' onclick=\"return confirm('Apakah Anda yakin ingin menghapus data ini?')\">Delete</a>
+                                        </td>";
+                                    echo "</tr>";
+                                }
+                            } else {
+                                echo "<tr><td colspan='12'>Tidak ada data penjualan barang.</td></tr>";
+                            }
+                            $conn->close(); // Close database connection
+                            ?>
+                        </table>
+
+                        <script>
+                            // Function to show the penjualan form
+                            function showForm() {
+                                var form = document.getElementById('formPenjualan');
+                                form.style.display = 'block';
+                            }
+                        </script>
+
+                    </body>
+
+                    </html>
