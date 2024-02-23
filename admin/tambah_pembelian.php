@@ -1,16 +1,5 @@
 <?php
-// Buat koneksi ke database
-$servername = "localhost";
-$username = "root"; 
-$password = "";
-$dbname = "pos_alfi";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Cek koneksi
-if ($conn->connect_error) {
-    die("Koneksi gagal: " . $conn->connect_error);
-}
+include 'koneksi.php';
 
 // Inisialisasi data pembelian
 $pembelianToAdd = [
@@ -19,10 +8,7 @@ $pembelianToAdd = [
     'user_id' => '',
     'no_faktur' => '',
     'tanggal_pembelian' => '',
-    'supplier_id' => '',
-    'total' => '',
-    'bayar' => '',
-    'sisa' => '',
+    'suplier_id' => '',
     'keterangan' => '',
     'created_at' => date("Y-m-d")
 ];
@@ -66,10 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         'user_id' => $_POST['userId'],
         'no_faktur' => $_POST['noFaktur'],
         'tanggal_pembelian' => $_POST['tanggalPembelian'],
-        'supplier_id' => $_POST['supplierId'],
-        'total' => $_POST['total'],
-        'bayar' => $_POST['bayar'],
-        'sisa' => $_POST['sisa'],
+        'suplier_id' => $_POST['suplierId'],
         'keterangan' => $_POST['keterangan'],
         'created_at' => $_POST['createdAt'],
     ];
@@ -91,7 +74,7 @@ $conn->close();
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 160vh;
+            height: 110vh;
             margin: 0;
         }
 
@@ -139,6 +122,32 @@ $conn->close();
         h2 {
             text-align: center;
         }
+
+        /* CSS untuk penampilan tabel produk */
+        #productTableContainer {
+            float: right;
+            width: 50%;
+            padding-left: 20px;
+            position: relative;
+            bottom: 300px;
+        }
+
+        #productTable {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #productTable td, #productTable th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #productTable th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #f2f2f2;
+        }
     </style>
 </head>
 
@@ -148,8 +157,6 @@ $conn->close();
         <h2>Tambah Pembelian</h2>
 
         <form id="formTambahPembelian" method="post" action="process_tambah_pembelian.php">
-            <label for="pembelianId">Pembelian ID:</label>
-            <input type="text" id="pembelianId" name="pembelianId" value="<?= $pembelianToAdd['pembelian_id'] ?>" readonly>
 
             <label for="tokoId">Nama Toko:</label>
             <select id="tokoId" name="tokoId" required>
@@ -169,20 +176,11 @@ $conn->close();
             <label for="tanggalPembelian">Tanggal Pembelian:</label>
             <input type="date" id="tanggalPembelian" name="tanggalPembelian" value="<?= $pembelianToAdd['tanggal_pembelian'] ?>" required>
 
-            <label for="supplierId">Nama Supplier:</label>
-            <select id="supplierId" name="supplierId" required>
+            <label for="suplierId">Nama Supplier:</label>
+            <select id="suplierId" name="suplierId" required onchange="showProducts()">
                 <option value="">Pilih Supplier</option>
                 <?= $supplierOptions ?>
             </select>
-
-            <label for="total">Total:</label>
-            <input type="text" id="total" name="total" value="<?= $pembelianToAdd['total'] ?>" required>
-
-            <label for="bayar">Bayar:</label>
-            <input type="text" id="bayar" name="bayar" value="<?= $pembelianToAdd['bayar'] ?>" required>
-
-            <label for="sisa">Sisa:</label>
-            <input type="text" id="sisa" name="sisa" value="<?= $pembelianToAdd['sisa'] ?>" required>
 
             <label for="keterangan">Keterangan:</label>
             <input type="text" id="keterangan" name="keterangan" value="<?= $pembelianToAdd['keterangan'] ?>" required>
@@ -194,7 +192,45 @@ $conn->close();
             <button id="batalBtn" type="button" onclick="history.back()">Batal</button>
         </form>
     </div>
+    <!-- Container untuk menampilkan tabel produk -->
+    <div id="productTableContainer">
+                <h3>Daftar Produk</h3>
+                <table id="productTable">
+                    <thead>
+                        <tr>
+                            <th>Nama Produk</th>
+                            <th>Harga</th>
+                            <!-- Kolom lain yang Anda inginkan -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Isi tabel produk akan ditampilkan di sini -->
+                    </tbody>
+                </table>
+            </div>
 
+    <script>
+        // Fungsi untuk menampilkan tabel produk saat pilihan suplier berubah
+        function showProducts() {
+            // Dapatkan nilai suplier yang dipilih
+            var suplierId = document.getElementById("suplierId").value;
+            
+            // Buat objek XMLHTTPRequest
+            var xhttp = new XMLHttpRequest();
+
+            // Tetapkan fungsi yang akan dijalankan saat permintaan selesai
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    // Ketika permintaan selesai dan berhasil, tampilkan respons di dalam tabel produk
+                    document.getElementById("productTable").innerHTML = this.responseText;
+                }
+            };
+
+            // Kirim permintaan GET ke server untuk mendapatkan daftar produk dari suplier yang dipilih
+            xhttp.open("GET", "get_products.php?suplierId=" + suplierId, true);
+            xhttp.send();
+        }
+    </script>
 </body>
 
 </html>

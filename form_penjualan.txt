@@ -1,133 +1,198 @@
+<?php
+// Buat koneksi ke database
+$servername = "localhost";
+$username = "root"; 
+$password = "";
+$dbname = "pos_alfi";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Cek koneksi
+if ($conn->connect_error) {
+    die("Koneksi gagal: " . $conn->connect_error);
+}
+
+// Inisialisasi data pembelian
+$pembelianToAdd = [
+    'pembelian_id' => '',
+    'toko_id' => '',
+    'user_id' => '',
+    'no_faktur' => '',
+    'tanggal_pembelian' => '',
+    'supplier_id' => '',
+    'total' => '',
+    'bayar' => '',
+    'sisa' => '',
+    'keterangan' => '',
+    'created_at' => date("Y-m-d")
+];
+
+// Ambil data toko dari database
+$sql = "SELECT toko_id, nama_toko FROM toko";
+$result = $conn->query($sql);
+$tokoOptions = "";
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        $tokoOptions .= "<option value='" . $row["toko_id"] . "'>" . $row["nama_toko"] . "</option>";
+    }
+}
+
+// Ambil data user dari database
+$sql = "SELECT user_id, username FROM user";
+$result = $conn->query($sql);
+$userOptions = "";
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        $userOptions .= "<option value='" . $row["user_id"] . "'>" . $row["username"] . "</option>";
+    }
+}
+
+// Ambil data supplier dari database
+$sql = "SELECT suplier_id, nama_suplier FROM suplier";
+$result = $conn->query($sql);
+$supplierOptions = "";
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        $supplierOptions .= "<option value='" . $row["suplier_id"] . "'>" . $row["nama_suplier"] . "</option>";
+    }
+}
+
+// Jika data pembelian sudah ada dalam formulir POST, gunakan data tersebut
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Tangani data POST
+    $pembelianToAdd = [
+        'pembelian_id' => $_POST['pembelianId'],
+        'toko_id' => $_POST['tokoId'],
+        'user_id' => $_POST['userId'],
+        'no_faktur' => $_POST['noFaktur'],
+        'tanggal_pembelian' => $_POST['tanggalPembelian'],
+        'supplier_id' => $_POST['supplierId'],
+        'total' => $_POST['total'],
+        'bayar' => $_POST['bayar'],
+        'sisa' => $_POST['sisa'],
+        'keterangan' => $_POST['keterangan'],
+        'created_at' => $_POST['createdAt'],
+    ];
+}
+
+// Tutup koneksi
+$conn->close();
+?>
+
 <!DOCTYPE html>
-                    <html lang="en">
+<html lang="en">
 
-                    <head>
-                        <meta charset="UTF-8">
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                        <title>Data Penjualan Barang</title>
-                        <style>
-                            table {
-                                width: 100%;
-                                border-collapse: collapse;
-                                margin-top: 20px;
-                            }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tambah Pembelian</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 160vh;
+            margin: 0;
+        }
 
-                            th,
-                            td {
-                                border: 1px solid #ddd;
-                                padding: 8px;
-                                text-align: left;
-                                color: #000;
-                            }
+        #formContainer {
+            width: 400px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
 
-                            th {
-                                background-color: #f2f2f2;
-                            }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
 
-                            button {
-                                padding: 5px 10px;
-                                margin-right: 5px;
-                            }
+        select, input {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 8px;
+            box-sizing: border-box;
+        }
 
-                            /* Perubahan pada input-field */
-                            .input-field {
-                                margin-bottom: 10px;
-                            }
+        button {
+            width: 49%;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
 
-                            .input-field label {
-                                display: block;
-                                margin-bottom: 5px;
-                                font-weight: bold; /* Menambahkan ketebalan pada label */
-                            }
+        #simpanBtn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+        }
 
-                            .input-field input,
-                            .input-field select {
-                                width: calc(100% - 22px); /* Mengatur lebar input */
-                                padding: 5px;
-                                border: 1px solid #ccc;
-                                border-radius: 5px;
-                                margin-top: 5px; /* Menambahkan jarak antara input dan label */
-                            }
+        #batalBtn {
+            float: right;
+            background-color: #ccc;
+            color: black;
+            border: none;
+        }
 
-                            /* Button */
-                            .input-field button {
-                                width: 100%;
-                                background-color: #4CAF50;
-                                color: white;
-                                border: none;
-                                padding: 10px;
-                                border-radius: 5px;
-                                cursor: pointer;
-                            }
-                        </style>
-                    </head>
+        h2 {
+            text-align: center;
+        }
+    </style>
+</head>
 
-                    <body>
+<body>
 
-                        <h2>Tambah Penjualan</h2>
+    <div id="formContainer">
+        <h2>Tambah Pembelian</h2>
 
-                        <!-- Tombol untuk menampilkan form tambah penjualan -->
-                        <a href="../admin/tambah_penjualan.php"><button onclick="tambahPenjualan()" class='btn btn-primary'>Tambah Penjualan</button></a>
+        <form id="formTambahPembelian" method="post" action="process_tambah_pembelian.php">
 
-                        <!-- Tabel Penjualan -->
-                        <table id="tabelPenjualan">
-                            <tr>
-                                <th>Penjualan ID</th>
-                                <th>Nama Toko</th>
-                                <th>User</th>
-                                <th>Tanggal Penjualan</th>
-                                <th>Pelanggan</th>
-                                <th>Total</th>
-                                <th>Bayar</th>
-                                <th>Sisa</th>
-                                <th>Keterangan</th>
-                                <th>Aksi</th>
-                            </tr>
-                            <!-- Dynamic data for penjualan -->
-                            <?php
-                            include 'koneksi.php';
+            <label for="tokoId">Nama Toko:</label>
+            <select id="tokoId" name="tokoId" required>
+                <option value="">Pilih Toko</option>
+                <?= $tokoOptions ?>
+            </select>
 
-                            $sql = "SELECT penjualan.*, toko.nama_toko AS nama_toko, user.nama_lengkap AS nama_user, pelanggan.nama_pelanggan, penjualan_detail.qty AS jumlah_barang, produk.nama_produk AS nama_produk FROM penjualan
-                                    INNER JOIN toko ON penjualan.toko_id = toko.toko_id
-                                    INNER JOIN user ON penjualan.user_id = user.user_id
-                                    INNER JOIN pelanggan ON penjualan.pelanggan = pelanggan.pelanggan_id
-                                    INNER JOIN penjualan_detail ON penjualan.penjualan_id = penjualan_detail.penjualan_id
-                                    INNER JOIN produk ON penjualan_detail.produk_id = produk.produk_id";
+            <label for="userId">Nama User:</label>
+            <select id="userId" name="userId" required>
+                <option value="">Pilih User</option>
+                <?= $userOptions ?>
+            </select>
 
-                            $result = $conn->query($sql);
-                            if ($result->num_rows > 0) {
-                                while ($row = $result->fetch_assoc()) {
-                                    echo "<tr>";
-                                    echo "<td>" . $row["penjualan_id"] . "</td>";
-                                    echo "<td>" . $row["nama_toko"] . "</td>";
-                                    echo "<td>" . $row["nama_user"] . "</td>";
-                                    echo "<td>" . $row["tanggal_penjualan"] . "</td>";
-                                    echo "<td>" . $row["nama_pelanggan"] . "</td>";
-                                    echo "<td>" . $row["total"] . "</td>";
-                                    echo "<td>" . $row["bayar"] . "</td>";
-                                    echo "<td>" . $row["sisa"] . "</td>";
-                                    echo "<td>" . $row["keterangan"] . "</td>";
-                                    echo "<td>
-                                            <a href='edit_penjualan_barang.php?id=" . $row["penjualan_id"] . "' class='btn btn-success btn-sm'>Edit</a>
-                                            <a href='hapus_penjualan.php?id=" . $row["penjualan_id"] . "' class='btn btn-danger btn-sm' onclick=\"return confirm('Apakah Anda yakin ingin menghapus data ini?')\">Delete</a>
-                                        </td>";
-                                    echo "</tr>";
-                                }
-                            } else {
-                                echo "<tr><td colspan='12'>Tidak ada data penjualan barang.</td></tr>";
-                            }
-                            $conn->close(); // Close database connection
-                            ?>
-                        </table>
+            <label for="noFaktur">No Faktur:</label>
+            <input type="text" id="noFaktur" name="noFaktur" value="<?= $pembelianToAdd['no_faktur'] ?>" required>
 
-                        <script>
-                            // Function to show the penjualan form
-                            function showForm() {
-                                var form = document.getElementById('formPenjualan');
-                                form.style.display = 'block';
-                            }
-                        </script>
+            <label for="tanggalPembelian">Tanggal Pembelian:</label>
+            <input type="date" id="tanggalPembelian" name="tanggalPembelian" value="<?= $pembelianToAdd['tanggal_pembelian'] ?>" required>
 
-                    </body>
+            <label for="supplierId">Nama Supplier:</label>
+            <select id="supplierId" name="supplierId" required>
+                <option value="">Pilih Supplier</option>
+                <?= $supplierOptions ?>
+            </select>
 
-                    </html>
+            <label for="total">Total:</label>
+            <input type="text" id="total" name="total" value="<?= $pembelianToAdd['total'] ?>" required>
+
+            <label for="bayar">Bayar:</label>
+            <input type="text" id="bayar" name="bayar" value="<?= $pembelianToAdd['bayar'] ?>" required>
+
+            <label for="sisa">Sisa:</label>
+            <input type="text" id="sisa" name="sisa" value="<?= $pembelianToAdd['sisa'] ?>" required>
+
+            <label for="keterangan">Keterangan:</label>
+            <input type="text" id="keterangan" name="keterangan" value="<?= $pembelianToAdd['keterangan'] ?>" required>
+
+            <label for="createdAt">Created At:</label>
+            <input type="text" id="createdAt" name="createdAt" value="<?= $pembelianToAdd['created_at'] ?>" readonly>
+
+            <button id="simpanBtn" type="submit">Simpan</button>
+            <button id="batalBtn" type="button" onclick="history.back()">Batal</button>
+        </form>
+    </div>
+
+</body>
+
+</html>
