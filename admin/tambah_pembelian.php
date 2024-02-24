@@ -238,11 +238,7 @@ $conn->close();
                 <label for="tanggalPembelian">Tanggal Pembelian:</label>
                 <input type="date" id="tanggalPembelian" name="tanggalPembelian" value="<?= $pembelianToAdd['tanggal_pembelian'] ?>" required>
 
-                <label for="suplierId">Nama Supplier:</label>
-                <select id="suplierId" name="suplierId" required onchange="showProducts()">
-                    <option value="">Pilih Supplier</option>
-                    <?= $supplierOptions ?>
-                </select>
+                <!-- Hapus bagian input produk dari supplier -->
 
                 <label for="keterangan">Keterangan:</label>
                 <input type="text" id="keterangan" name="keterangan" value="<?= $pembelianToAdd['keterangan'] ?>" required>
@@ -309,8 +305,13 @@ $conn->close();
                 const harga = getProductPrice(productName); // Panggil fungsi getProductPrice() untuk mendapatkan harga produk
                 total += harga * qty;
             });
-            document.getElementById('totalAmount').textContent = total.toFixed(2);
+            document.getElementById('totalAmount').textContent = formatCurrency(total); // Format angka sebagai mata uang
             return total;
+        }
+
+        // Fungsi untuk memformat angka sebagai mata uang (Rp. 20,000.00)
+        function formatCurrency(amount) {
+            return 'Rp. ' + amount.toLocaleString('id-ID', { minimumFractionDigits: 2 });
         }
 
         // Fungsi untuk mendapatkan harga produk berdasarkan namanya
@@ -328,15 +329,20 @@ $conn->close();
         // Fungsi untuk menghitung sisa pembayaran
         function hitungSisa() {
             const total = updateTotal();
-            const bayar = parseFloat(document.getElementById('bayar').value) || 0; // tambahkan || 0 untuk menangani input yang kosong
+            let bayarValue = document.getElementById('bayar').value;
+            // Hapus titik sebagai pemisah ribuan
+            bayarValue = bayarValue.replace(/\./g, '');
+            const bayar = parseFloat(bayarValue) || 0;
             const sisa = bayar - total;
-            document.getElementById('sisaBayar').textContent = isNaN(sisa) ? 0 : (sisa >= 0 ? sisa.toFixed(2) : 0); // tangani jika sisa adalah NaN dan pastikan tidak negatif
+            document.getElementById('sisaBayar').textContent = isNaN(sisa) ? 'Rp. 0,00' : (sisa >= 0 ? 'Rp. ' + sisa.toLocaleString('id-ID', { minimumFractionDigits: 2 }) : 'Rp. 0,00');
         }
 
         // Fungsi untuk memperbarui checkbox dan menghitung total saat jumlah barang diubah
         function updateCheckbox(element, productName) {
+            const qtyInput = document.getElementById('qty' + productName);
+            const qty = parseFloat(qtyInput.value) || 0;
             const checkbox = document.getElementById('chk' + productName);
-            checkbox.checked = element.value > 0;
+            checkbox.checked = qty > 0;
             hitungSisa();
         }
 
@@ -345,8 +351,10 @@ $conn->close();
             const productName = element.value;
             const qtyInput = document.getElementById('qty' + productName);
             qtyInput.value = element.checked ? 1 : 0;
+            updateCheckbox(element, productName); // Perbarui checkbox saat jumlah barang diubah
             hitungSisa();
         }
+
 
         // Tambahkan event listener untuk checkbox dan input jumlah barang
         const checkboxes = document.querySelectorAll('.selectProduct');
