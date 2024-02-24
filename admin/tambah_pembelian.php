@@ -74,7 +74,7 @@ $conn->close();
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            height: 120vh;
             margin: 0;
             font-family: Arial, sans-serif;
         }
@@ -238,10 +238,26 @@ $conn->close();
                 <label for="tanggalPembelian">Tanggal Pembelian:</label>
                 <input type="date" id="tanggalPembelian" name="tanggalPembelian" value="<?= $pembelianToAdd['tanggal_pembelian'] ?>" required>
 
-                <!-- Hapus bagian input produk dari supplier -->
+                <label for="suplierId">Nama Supplier:</label>
+                <select id="suplierId" name="suplierId" required onchange="showProducts()">
+                    <option value="">Pilih Supplier</option>
+                    <?= $supplierOptions ?>
+                </select>
+
+                <!-- Tambahkan div untuk menampilkan total, bayar, dan sisa -->
+                <div id="totalBayar">
+                    <div>Total: <span id="totalAmount" oninput="hitungTotal()">0</span></div>
+                    <div>
+                        <label for="bayar">Bayar:</label>
+                        <input type="number" id="bayar" name="bayar" oninput="hitungSisa()">
+                    </div>
+                    <div>Sisa: <span id="sisaBayar" oninput="hitungSisa()">0</span></div>
+                </div>
 
                 <label for="keterangan">Keterangan:</label>
                 <input type="text" id="keterangan" name="keterangan" value="<?= $pembelianToAdd['keterangan'] ?>" required>
+
+                <input type="hidden" id="createdAt" name="createdAt" value="<?= date("Y-m-d") ?>">
 
                 <button id="simpanBtn" type="submit">Simpan</button>
                 <button id="batalBtn" type="button" onclick="history.back()">Batal</button>
@@ -280,17 +296,8 @@ $conn->close();
                     </tr>
                 </tbody>
             </table>
-            <!-- Tambahkan tombol "Selesai" -->
-            <button id="selesaiBtn" onclick="selesaiPembelian()" style="margin-left:190px;">Selesai</button>
-            <!-- Tambahkan div untuk menampilkan total, bayar, dan sisa -->
-            <div id="totalBayar">
-                <div>Total: <span id="totalAmount" oninput="hitungTotal()">0</span></div>
-                <div>
-                    <label for="bayar">Bayar:</label>
-                    <input type="number" id="bayar" name="bayar" oninput="hitungSisa()">
-                </div>
-                <div>Sisa: <span id="sisaBayar" oninput="hitungSisa()">0</span></div>
-            </div>
+            <br>
+            
         </div>
     </div>
 

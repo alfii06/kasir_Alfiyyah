@@ -17,45 +17,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Periksa apakah nilai total, bayar, dan sisa tidak kosong
     if (!empty($total) && !empty($bayar) && !empty($sisa)) {
-        // Simpan data ke database
-        try {
-            $pdo = new PDO("mysql:host=localhost;dbname=pos_alfi", "root", "");
+        // Lakukan koneksi ke database
+        $mysqli = new mysqli("localhost", "root", "", "pos_alfi");
 
-            // Set mode PDO untuk menangani error secara eksepsional
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        // Periksa koneksi
+        if ($mysqli->connect_error) {
+            die("Koneksi database gagal: " . $mysqli->connect_error);
+        }
 
-            // Query SQL untuk menyimpan data ke tabel pembelian
-            $query = "INSERT INTO pembelian (toko_id, user_id, no_faktur, tanggal_pembelian, suplier_id, total, bayar, sisa, keterangan, created_at)
-                      VALUES (:tokoId, :userId, :noFaktur, :tanggalPembelian, :suplierId, :total, :bayar, :sisa, :keterangan, :createdAt)";
+        // Query SQL untuk menyimpan data ke tabel pembelian
+        $query = "INSERT INTO pembelian (toko_id, user_id, no_faktur, tanggal_pembelian, suplier_id, total, bayar, sisa, keterangan, created_at)
+                  VALUES ('$tokoId', '$userId', '$noFaktur', '$tanggalPembelian', '$suplierId', '$total', '$bayar', '$sisa', '$keterangan', '$createdAt')";
 
-            // Persiapkan statement SQL
-            $statement = $pdo->prepare($query);
-
-            // Bind parameter ke statement
-            $statement->bindParam(':tokoId', $tokoId);
-            $statement->bindParam(':userId', $userId);
-            $statement->bindParam(':noFaktur', $noFaktur);
-            $statement->bindParam(':tanggalPembelian', $tanggalPembelian);
-            $statement->bindParam(':suplierId', $suplierId);
-            $statement->bindParam(':total', $total);
-            $statement->bindParam(':bayar', $bayar);
-            $statement->bindParam(':sisa', $sisa);
-            $statement->bindParam(':keterangan', $keterangan);
-            $statement->bindParam(':createdAt', $createdAt);
-
-            // Eksekusi statement untuk menyimpan data
-            $statement->execute();
-
-            // Tutup koneksi database
-            $pdo = null;
-
+        if ($mysqli->query($query) === TRUE) {
             // Redirect ke halaman lain atau berikan respons sesuai kebutuhan
             header("Location: pembelian_barang.php");
             exit();
-        } catch (PDOException $e) {
-            // Tangkap dan tampilkan pesan kesalahan jika terjadi
-            echo "Error: " . $e->getMessage();
+        } else {
+            echo "Error: " . $query . "<br>" . $mysqli->error;
         }
+
+        // Tutup koneksi database
+        $mysqli->close();
     } else {
         // Tampilkan pesan kesalahan jika nilai total, bayar, atau sisa kosong
         echo "Error: Nilai total, bayar, atau sisa tidak boleh kosong.";
