@@ -74,8 +74,9 @@ $conn->close();
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 110vh;
+            height: 100vh;
             margin: 0;
+            font-family: Arial, sans-serif;
         }
 
         #formContainer {
@@ -91,7 +92,8 @@ $conn->close();
             margin-top: 10px;
         }
 
-        select, input {
+        select,
+        input {
             width: 100%;
             margin-bottom: 10px;
             padding: 8px;
@@ -121,6 +123,7 @@ $conn->close();
 
         h2 {
             text-align: center;
+            margin-bottom: 20px;
         }
 
         /* CSS untuk penampilan tabel produk */
@@ -128,8 +131,6 @@ $conn->close();
             float: right;
             width: 50%;
             padding-left: 20px;
-            position: relative;
-            bottom: 300px;
         }
 
         #productTable {
@@ -137,7 +138,8 @@ $conn->close();
             width: 100%;
         }
 
-        #productTable td, #productTable th {
+        #productTable td,
+        #productTable th {
             border: 1px solid #ddd;
             padding: 8px;
         }
@@ -148,78 +150,165 @@ $conn->close();
             text-align: left;
             background-color: #f2f2f2;
         }
+
+        /* Tambahkan gaya untuk checkbox */
+        .checkbox-label {
+            display: block;
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .checkbox-label input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 20px;
+            width: 20px;
+            background-color: #eee;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        .checkbox-label:hover input~.checkmark {
+            background-color: #ccc;
+        }
+
+        .checkbox-label input:checked~.checkmark {
+            background-color: #2196F3;
+        }
+
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        .checkbox-label input:checked~.checkmark:after {
+            display: block;
+        }
+
+        .checkbox-label .checkmark:after {
+            left: 7px;
+            top: 3px;
+            width: 6px;
+            height: 12px;
+            border: solid white;
+            border-width: 0 3px 3px 0;
+            -webkit-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            transform: rotate(45deg);
+        }
     </style>
 </head>
 
 <body>
+    <div style='display:flex;flex-direction:row;'>
 
-    <div id="formContainer">
-        <h2>Tambah Pembelian</h2>
+        <div id="formContainer">
+            <h2>Tambah Pembelian</h2>
 
-        <form id="formTambahPembelian" method="post" action="process_tambah_pembelian.php">
+            <form id="formTambahPembelian" method="post" action="process_tambah_pembelian.php">
 
-            <label for="tokoId">Nama Toko:</label>
-            <select id="tokoId" name="tokoId" required>
-                <option value="">Pilih Toko</option>
-                <?= $tokoOptions ?>
-            </select>
+                <label for="tokoId">Nama Toko:</label>
+                <select id="tokoId" name="tokoId" required>
+                    <option value="">Pilih Toko</option>
+                    <?= $tokoOptions ?>
+                </select>
 
-            <label for="userId">Nama User:</label>
-            <select id="userId" name="userId" required>
-                <option value="">Pilih User</option>
-                <?= $userOptions ?>
-            </select>
+                <label for="userId">Nama User:</label>
+                <select id="userId" name="userId" required>
+                    <option value="">Pilih User</option>
+                    <?= $userOptions ?>
+                </select>
 
-            <label for="noFaktur">No Faktur:</label>
-            <input type="text" id="noFaktur" name="noFaktur" value="<?= $pembelianToAdd['no_faktur'] ?>" required>
+                <label for="noFaktur">No Faktur:</label>
+                <input type="text" id="noFaktur" name="noFaktur" value="<?= $pembelianToAdd['no_faktur'] ?>" required>
 
-            <label for="tanggalPembelian">Tanggal Pembelian:</label>
-            <input type="date" id="tanggalPembelian" name="tanggalPembelian" value="<?= $pembelianToAdd['tanggal_pembelian'] ?>" required>
+                <label for="tanggalPembelian">Tanggal Pembelian:</label>
+                <input type="date" id="tanggalPembelian" name="tanggalPembelian" value="<?= $pembelianToAdd['tanggal_pembelian'] ?>" required>
 
-            <label for="suplierId">Nama Supplier:</label>
-            <select id="suplierId" name="suplierId" required onchange="showProducts()">
-                <option value="">Pilih Supplier</option>
-                <?= $supplierOptions ?>
-            </select>
+                <label for="suplierId">Nama Supplier:</label>
+                <select id="suplierId" name="suplierId" required onchange="showProducts()">
+                    <option value="">Pilih Supplier</option>
+                    <?= $supplierOptions ?>
+                </select>
 
-            <label for="keterangan">Keterangan:</label>
-            <input type="text" id="keterangan" name="keterangan" value="<?= $pembelianToAdd['keterangan'] ?>" required>
+                <label for="keterangan">Keterangan:</label>
+                <input type="text" id="keterangan" name="keterangan" value="<?= $pembelianToAdd['keterangan'] ?>" required>
 
-            <label for="createdAt">Created At:</label>
-            <input type="text" id="createdAt" name="createdAt" value="<?= $pembelianToAdd['created_at'] ?>" readonly>
-
-            <button id="simpanBtn" type="submit">Simpan</button>
-            <button id="batalBtn" type="button" onclick="history.back()">Batal</button>
-        </form>
-    </div>
-    <!-- Container untuk menampilkan tabel produk -->
-    <div id="productTableContainer">
-                <h3>Daftar Produk</h3>
-                <table id="productTable">
-                    <thead>
-                        <tr>
-                            <th>Nama Produk</th>
-                            <th>Harga</th>
-                            <!-- Kolom lain yang Anda inginkan -->
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Isi tabel produk akan ditampilkan di sini -->
-                    </tbody>
-                </table>
+                <button id="simpanBtn" type="submit">Simpan</button>
+                <button id="batalBtn" type="button" onclick="history.back()">Batal</button>
+            </form>
+        </div>
+        <!-- Container untuk menampilkan tabel produk -->
+        <div id="productTableContainer">
+            <h3>Daftar Produk</h3>
+            <table id="productTable">
+                <thead>
+                    <tr>
+                        <th>Nama Produk</th>
+                        <th>Harga</th>
+                        <th>Qty</th>
+                        <th>Pilih</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Ekonomi</td>
+                        <td>Rp. 20.000</td>
+                        <td><input type="number" id="qtyEkonomi" name="qtyEkonomi" min="0" style="width:60px;"></td>
+                        <td><input type="checkbox" class="selectProduct" id="chkEkonomi" name="selectProduct[]" value="Ekonomi"></td>
+                    </tr>
+                    <tr>
+                        <td>Kopi</td>
+                        <td>Rp. 25.000</td>
+                        <td><input type="number" id="qtyKopi" name="qtyKopi" min="0" style="width:60px;"></td>
+                        <td><input type="checkbox" class="selectProduct" id="chkKopi" name="selectProduct[]" value="Kopi"></td>
+                    </tr>
+                    <tr>
+                        <td>Nabati</td>
+                        <td>Rp. 20.000</td>
+                        <td><input type="number" id="qtyNabati" name="qtyNabati" min="0" style="width:60px;"></td>
+                        <td><input type="checkbox" class="selectProduct" id="chkNabati" name="selectProduct[]" value="Nabati"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- Tambahkan tombol "Selesai" -->
+            <button id="selesaiBtn" onclick="selesaiPembelian()" style="margin-left:190px;">Selesai</button>
+            <!-- Tambahkan div untuk menampilkan total, bayar, dan sisa -->
+            <div id="totalBayar">
+                <div>Total: <span id="totalAmount" oninput="hitungTotal()">0</span></div>
+                <div>
+                    <label for="bayar">Bayar:</label>
+                    <input type="number" id="bayar" name="bayar" oninput="hitungSisa()">
+                </div>
+                <div>Sisa: <span id="sisaBayar" oninput="hitungSisa()">0</span></div>
             </div>
+        </div>
+    </div>
 
     <script>
         // Fungsi untuk menampilkan tabel produk saat pilihan suplier berubah
         function showProducts() {
             // Dapatkan nilai suplier yang dipilih
             var suplierId = document.getElementById("suplierId").value;
-            
+
             // Buat objek XMLHTTPRequest
             var xhttp = new XMLHttpRequest();
 
             // Tetapkan fungsi yang akan dijalankan saat permintaan selesai
-            xhttp.onreadystatechange = function() {
+            xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     // Ketika permintaan selesai dan berhasil, tampilkan respons di dalam tabel produk
                     document.getElementById("productTable").innerHTML = this.responseText;
@@ -230,6 +319,97 @@ $conn->close();
             xhttp.open("GET", "get_products.php?suplierId=" + suplierId, true);
             xhttp.send();
         }
+
+        function hitungTotal() {
+            let total = 0;
+            const checkboxes = document.querySelectorAll('.selectProduct:checked');
+            checkboxes.forEach(function (checkbox) {
+                const productName = checkbox.value;
+                const qty = parseFloat(document.getElementById('qty' + productName).value) || 0;
+                const harga = parseFloat(checkbox.parentNode.nextElementSibling.textContent.replace('Rp. ', '').replace(',', ''));
+                total += harga * qty;
+            });
+            return total;
+        }
+
+
+        // Fungsi untuk menghitung sisa pembayaran
+        function hitungSisa() {
+            const total = hitungTotal();
+            const bayar = parseFloat(document.getElementById('bayar').value) || 0; // tambahkan || 0 untuk menangani input yang kosong
+            const sisa = bayar - total;
+            document.getElementById('totalAmount').textContent = total.toFixed(2); // Perbarui tampilan total
+            document.getElementById('sisaBayar').textContent = isNaN(sisa) ? 0 : (sisa >= 0 ? sisa.toFixed(2) : 0); // tangani jika sisa adalah NaN dan pastikan tidak negatif
+        }
+
+        // Fungsi untuk memperbarui checkbox dan menghitung total saat jumlah barang diubah
+        function updateCheckbox(element, productName) {
+            const checkbox = document.getElementById('chk' + productName);
+            checkbox.checked = element.value > 0;
+            hitungSisa();
+        }
+
+        // Fungsi untuk memperbarui jumlah barang dan menghitung total saat checkbox diubah
+        function updateQty(element) {
+            const productName = element.value;
+            const qtyInput = document.getElementById('qty' + productName);
+            qtyInput.value = element.checked ? 1 : 0;
+            hitungSisa();
+        }
+
+        // Tambahkan event listener untuk checkbox dan input jumlah barang
+        const checkboxes = document.querySelectorAll('.selectProduct');
+        checkboxes.forEach(function (checkbox) {
+            checkbox.addEventListener('change', function () {
+                updateQty(this);
+            });
+        });
+
+        const qtyInputs = document.querySelectorAll('input[type="number"]');
+        qtyInputs.forEach(function (input) {
+            input.addEventListener('input', function () {
+                updateCheckbox(this, input.id.replace('qty', ''));
+            });
+        });
+
+        // Panggil hitungSisa() untuk menginisialisasi total saat halaman dimuat
+        window.onload = function () {
+            hitungSisa();
+        };
+
+        // Fungsi untuk menampilkan pesan dan mengonfirmasi pembelian selesai
+        function selesaiPembelian() {
+            // Hitung total
+            const total = hitungTotal();
+            
+            // Dapatkan nilai bayar dari input
+            const bayarInput = document.getElementById('bayar');
+            const bayar = parseFloat(bayarInput.value) || 0; // tambahkan || 0 untuk menangani input yang kosong
+
+            // Hitung sisa pembayaran
+            const sisa = bayar - total;
+
+            // Perbarui tampilan total dan sisa
+            document.getElementById('totalAmount').textContent = total.toFixed(2);
+            document.getElementById('sisaBayar').textContent = sisa.toFixed(2);
+
+            // Tampilkan notifikasi sesuai dengan sisa pembayaran
+            if (!isNaN(total)) {
+                if (sisa >= 0) {
+                    // Jika pembayaran mencukupi
+                    alert('Pembelian berhasil. Total yang harus dibayar: Rp. ' + total.toFixed(2) + '. Sisa: Rp. ' + sisa.toFixed(2));
+                } else {
+                    // Jika pembayaran tidak mencukupi
+                    alert('Pembayaran tidak mencukupi. Total yang harus dibayar: Rp. ' + total.toFixed(2) + '. Silakan periksa kembali pembayaran Anda.');
+                }
+            } else {
+                // Jika jumlah barang yang dibeli tidak valid
+                alert('Mohon masukkan jumlah barang yang dibeli.');
+            }
+        }
+
+
+
     </script>
 </body>
 
