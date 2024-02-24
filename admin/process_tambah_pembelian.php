@@ -35,6 +35,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit();
         } else {
             echo "Error: " . $query . "<br>" . $mysqli->error;
+            // Tambahkan pernyataan ini untuk memastikan kode dijalankan
+            die("Penyimpanan data gagal.");
         }
 
         // Tutup koneksi database

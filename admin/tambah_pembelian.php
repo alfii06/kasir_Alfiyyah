@@ -9,6 +9,9 @@ $pembelianToAdd = [
     'no_faktur' => '',
     'tanggal_pembelian' => '',
     'suplier_id' => '',
+    'total' => '',
+    'bayar' => '',
+    'sisa' => '',
     'keterangan' => '',
     'created_at' => date("Y-m-d")
 ];
@@ -53,6 +56,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         'no_faktur' => $_POST['noFaktur'],
         'tanggal_pembelian' => $_POST['tanggalPembelian'],
         'suplier_id' => $_POST['suplierId'],
+        'total' => $_POST['total'],
+        'bayar' => $_POST['bayar'],
+        'sisa' => $_POST['sisa'],
         'keterangan' => $_POST['keterangan'],
         'created_at' => $_POST['createdAt'],
     ];
@@ -220,6 +226,8 @@ $conn->close();
 
             <form id="formTambahPembelian" method="post" action="process_tambah_pembelian.php">
 
+                <input type="hidden" id="pembelianId" name="pembelianId" value="">
+
                 <label for="tokoId">Nama Toko:</label>
                 <select id="tokoId" name="tokoId" required>
                     <option value="">Pilih Toko</option>
@@ -243,6 +251,9 @@ $conn->close();
                     <option value="">Pilih Supplier</option>
                     <?= $supplierOptions ?>
                 </select>
+
+                <input type="hidden" id="total" name="total">
+                <input type="hidden" id="sisa" name="sisa">
 
                 <!-- Tambahkan div untuk menampilkan total, bayar, dan sisa -->
                 <div id="totalBayar">
@@ -381,6 +392,7 @@ $conn->close();
         // Panggil hitungSisa() untuk menginisialisasi total saat halaman dimuat
         window.onload = function () {
             hitungSisa();
+            updateTotal();
         };
 
         // Fungsi untuk menampilkan pesan dan mengonfirmasi pembelian selesai
