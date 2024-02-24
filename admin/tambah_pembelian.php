@@ -267,20 +267,20 @@ $conn->close();
                     <tr>
                         <td>Ekonomi</td>
                         <td>Rp. 20.000</td>
-                        <td><input type="number" id="qtyEkonomi" name="qtyEkonomi" min="0" style="width:60px;"></td>
-                        <td><input type="checkbox" class="selectProduct" id="chkEkonomi" name="selectProduct[]" value="Ekonomi"></td>
+                        <td><input type="number" id="qtyEkonomi" name="qtyEkonomi" min="0" style="width:60px;" oninput="hitungSisa()"></td>
+                        <td><input type="checkbox" class="selectProduct" id="chkEkonomi" name="selectProduct[]" value="Ekonomi" onchange="updateQty(this)"></td>
                     </tr>
                     <tr>
                         <td>Kopi</td>
                         <td>Rp. 25.000</td>
-                        <td><input type="number" id="qtyKopi" name="qtyKopi" min="0" style="width:60px;"></td>
-                        <td><input type="checkbox" class="selectProduct" id="chkKopi" name="selectProduct[]" value="Kopi"></td>
+                        <td><input type="number" id="qtyKopi" name="qtyKopi" min="0" style="width:60px;" oninput="hitungSisa()"></td>
+                        <td><input type="checkbox" class="selectProduct" id="chkKopi" name="selectProduct[]" value="Kopi" onchange="updateQty(this)"></td>
                     </tr>
                     <tr>
                         <td>Nabati</td>
                         <td>Rp. 20.000</td>
-                        <td><input type="number" id="qtyNabati" name="qtyNabati" min="0" style="width:60px;"></td>
-                        <td><input type="checkbox" class="selectProduct" id="chkNabati" name="selectProduct[]" value="Nabati"></td>
+                        <td><input type="number" id="qtyNabati" name="qtyNabati" min="0" style="width:60px;" oninput="hitungSisa()"></td>
+                        <td><input type="checkbox" class="selectProduct" id="chkNabati" name="selectProduct[]" value="Nabati" onchange="updateQty(this)"></td>
                     </tr>
                 </tbody>
             </table>
@@ -299,46 +299,37 @@ $conn->close();
     </div>
 
     <script>
-        // Fungsi untuk menampilkan tabel produk saat pilihan suplier berubah
-        function showProducts() {
-            // Dapatkan nilai suplier yang dipilih
-            var suplierId = document.getElementById("suplierId").value;
-
-            // Buat objek XMLHTTPRequest
-            var xhttp = new XMLHttpRequest();
-
-            // Tetapkan fungsi yang akan dijalankan saat permintaan selesai
-            xhttp.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    // Ketika permintaan selesai dan berhasil, tampilkan respons di dalam tabel produk
-                    document.getElementById("productTable").innerHTML = this.responseText;
-                }
-            };
-
-            // Kirim permintaan GET ke server untuk mendapatkan daftar produk dari suplier yang dipilih
-            xhttp.open("GET", "get_products.php?suplierId=" + suplierId, true);
-            xhttp.send();
-        }
-
-        function hitungTotal() {
+        // Fungsi untuk menghitung total pembelian
+        function updateTotal() {
             let total = 0;
             const checkboxes = document.querySelectorAll('.selectProduct:checked');
             checkboxes.forEach(function (checkbox) {
                 const productName = checkbox.value;
                 const qty = parseFloat(document.getElementById('qty' + productName).value) || 0;
-                const harga = parseFloat(checkbox.parentNode.nextElementSibling.textContent.replace('Rp. ', '').replace(',', ''));
+                const harga = getProductPrice(productName); // Panggil fungsi getProductPrice() untuk mendapatkan harga produk
                 total += harga * qty;
             });
+            document.getElementById('totalAmount').textContent = total.toFixed(2);
             return total;
         }
 
+        // Fungsi untuk mendapatkan harga produk berdasarkan namanya
+        function getProductPrice(productName) {
+            // Harga barang (di sini diimplementasikan secara statis, Anda dapat memodifikasi agar sesuai dengan kebutuhan Anda)
+            const hargaBarang = {
+                "Ekonomi": 20000,
+                "Kopi": 25000,
+                "Nabati": 20000
+            };
+
+            return hargaBarang[productName] || 0; // Kembalikan harga produk, jika tidak ada, kembalikan 0
+        }
 
         // Fungsi untuk menghitung sisa pembayaran
         function hitungSisa() {
-            const total = hitungTotal();
+            const total = updateTotal();
             const bayar = parseFloat(document.getElementById('bayar').value) || 0; // tambahkan || 0 untuk menangani input yang kosong
             const sisa = bayar - total;
-            document.getElementById('totalAmount').textContent = total.toFixed(2); // Perbarui tampilan total
             document.getElementById('sisaBayar').textContent = isNaN(sisa) ? 0 : (sisa >= 0 ? sisa.toFixed(2) : 0); // tangani jika sisa adalah NaN dan pastikan tidak negatif
         }
 
@@ -380,7 +371,7 @@ $conn->close();
         // Fungsi untuk menampilkan pesan dan mengonfirmasi pembelian selesai
         function selesaiPembelian() {
             // Hitung total
-            const total = hitungTotal();
+            const total = updateTotal();
             
             // Dapatkan nilai bayar dari input
             const bayarInput = document.getElementById('bayar');
@@ -389,9 +380,8 @@ $conn->close();
             // Hitung sisa pembayaran
             const sisa = bayar - total;
 
-            // Perbarui tampilan total dan sisa
-            document.getElementById('totalAmount').textContent = total.toFixed(2);
-            document.getElementById('sisaBayar').textContent = sisa.toFixed(2);
+            // Perbarui tampilan sisa
+            document.getElementById('sisaBayar').textContent = isNaN(sisa) ? 0 : (sisa >= 0 ? sisa.toFixed(2) : 0);
 
             // Tampilkan notifikasi sesuai dengan sisa pembayaran
             if (!isNaN(total)) {
@@ -407,8 +397,6 @@ $conn->close();
                 alert('Mohon masukkan jumlah barang yang dibeli.');
             }
         }
-
-
 
     </script>
 </body>
