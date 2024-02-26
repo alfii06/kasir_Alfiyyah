@@ -8,6 +8,7 @@ $barangToEdit = [ // Inisialisasi default jika tidak ada parameter produk_id
     'satuan' => '',
     'harga_beli' => '',
     'harga_jual' => '',
+    'stok_barang' => '',
     'created_at' => ''
 ];
 
@@ -34,6 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         'satuan' => $_POST['satuan'],
         'harga_beli' => $_POST['hargaBeli'],
         'harga_jual' => $_POST['hargaJual'],
+        'stok_barang' => $_POST['stokBarang'],
         'created_at' => $_POST['createdAt'],
     ];
 }
@@ -51,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 125vh;
+            height: 130vh;
             margin: 0;
         }
 
@@ -76,10 +78,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         button {
-            width: 100%;
+            width: 49%;
             padding: 10px;
             border-radius: 5px;
             cursor: pointer;
+            margin-top: 10px;
         }
 
         #simpanBtn {
@@ -126,6 +129,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <label for="hargaJual">Harga Jual:</label>
         <input type="text" id="hargaJual" name="hargaJual" value="<?= $barangToEdit['harga_jual'] ?>" required>
+        
+        <label for="stokBarang">Stok Barang:</label>
+        <input type="text" id="stokBarang" name="stokBarang" value="<?= $barangToEdit['stok_barang'] ?>" required>
 
         <label for="createdAt">Created At:</label>
         <input type="text" id="createdAt" name="createdAt" value="<?= $barangToEdit['created_at'] ?>" readonly>

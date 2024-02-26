@@ -23,9 +23,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $satuan = $_POST['satuan'];
     $hargaBeli = $_POST['hargaBeli'];
     $hargaJual = $_POST['hargaJual'];
+    $stokBarang = $_POST['stokBarang'];
 
     // Query untuk melakukan update data barang
-    $sql = "UPDATE produk SET toko_id='$tokoId', nama_produk='$namaProduk', kategori_id='$kategoriId', satuan='$satuan', harga_beli='$hargaBeli', harga_jual='$hargaJual' WHERE produk_id='$produkId'";
+    $sql = "UPDATE produk SET toko_id='$tokoId', nama_produk='$namaProduk', kategori_id='$kategoriId', satuan='$satuan', harga_beli='$hargaBeli', harga_jual='$hargaJual', stok_barang='$stokBarang' WHERE produk_id='$produkId'";
 
     if ($conn->query($sql) === TRUE) {
         // Redirect kembali ke halaman edit dengan parameter sukses

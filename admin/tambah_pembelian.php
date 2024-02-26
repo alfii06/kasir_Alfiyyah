@@ -1,6 +1,6 @@
 <?php
 include 'koneksi.php';
-
+session_start();
 // Inisialisasi data pembelian
 $pembelianToAdd = [
     'pembelian_id' => '',
@@ -236,8 +236,7 @@ $conn->close();
 
                 <label for="userId">Nama User:</label>
                 <select id="userId" name="userId" required>
-                    <option value="">Pilih User</option>
-                    <?= $userOptions ?>
+                    <option value='<?= $_SESSION['user_id']?>'><?= $_SESSION['username']?></option>
                 </select>
 
                 <label for="noFaktur">No Faktur:</label>
@@ -252,12 +251,12 @@ $conn->close();
                     <?= $supplierOptions ?>
                 </select>
 
-                <input type="hidden" id="total" name="total">
-                <input type="hidden" id="sisa" name="sisa">
+                <input type="hidden" id="total" name="total" value="<?= $pembelianToAdd['total'] ?>">
+                <input type="hidden" id="sisa" name="sisa" value="<?= $pembelianToAdd['sisa'] ?>">
 
                 <!-- Tambahkan div untuk menampilkan total, bayar, dan sisa -->
                 <div id="totalBayar">
-                    <div>Total: <span id="totalAmount" oninput="hitungTotal()">0</span></div>
+                    <div>Total: <span id="totalAmount" oninput="updateTotal()">0</span></div>
                     <div>
                         <label for="bayar">Bayar:</label>
                         <input type="number" id="bayar" name="bayar" oninput="hitungSisa()">
@@ -313,7 +312,7 @@ $conn->close();
     </div>
 
     <script>
-        // Fungsi untuk menghitung total pembelian
+        // Fungsi untuk menghitung total pembelian dan memperbarui input tersembunyi
         function updateTotal() {
             let total = 0;
             const checkboxes = document.querySelectorAll('.selectProduct:checked');
@@ -323,6 +322,7 @@ $conn->close();
                 const harga = getProductPrice(productName); // Panggil fungsi getProductPrice() untuk mendapatkan harga produk
                 total += harga * qty;
             });
+            document.getElementById('total').value = total; // Perbarui nilai input tersembunyi total
             document.getElementById('totalAmount').textContent = formatCurrency(total); // Format angka sebagai mata uang
             return total;
         }
@@ -344,7 +344,7 @@ $conn->close();
             return hargaBarang[productName] || 0; // Kembalikan harga produk, jika tidak ada, kembalikan 0
         }
 
-        // Fungsi untuk menghitung sisa pembayaran
+        // Fungsi untuk menghitung sisa pembayaran dan memperbarui input tersembunyi
         function hitungSisa() {
             const total = updateTotal();
             let bayarValue = document.getElementById('bayar').value;
@@ -352,6 +352,7 @@ $conn->close();
             bayarValue = bayarValue.replace(/\./g, '');
             const bayar = parseFloat(bayarValue) || 0;
             const sisa = bayar - total;
+            document.getElementById('sisa').value = sisa; // Perbarui nilai input tersembunyi sisa
             document.getElementById('sisaBayar').textContent = isNaN(sisa) ? 'Rp. 0,00' : (sisa >= 0 ? 'Rp. ' + sisa.toLocaleString('id-ID', { minimumFractionDigits: 2 }) : 'Rp. 0,00');
         }
 

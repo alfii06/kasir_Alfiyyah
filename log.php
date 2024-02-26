@@ -1,7 +1,7 @@
 <?php
 //admin : 123
 //petugas : 12345
-
+session_start();
 // Connect to the database
 $host = "localhost";
 $user = "root";
@@ -29,6 +29,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Memeriksa kecocokan password menggunakan password_verify
         if (password_verify($password, $user_data['password'])) {
             // Login berhasil
+            $_SESSION['role'] = $user_data['role'];
+            $_SESSION['user_id'] = $user_data['user_id'];
+            $_SESSION['username'] = $user_data['username'];
+
             // Mengarahkan pengguna ke halaman sesuai peran (role)
             if ($user_data['role'] === 'admin') {
                 header("Location: dashboard/index.html");

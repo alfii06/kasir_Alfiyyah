@@ -196,3 +196,20 @@ $conn->close();
 </body>
 
 </html>
+
+
+
+
+
+
+
+
+
+<div id="totalBayar">
+                    <div>Total: <span id="totalAmount" oninput="hitungTotal()">0</span></div>
+                    <div>
+                        <label for="bayar">Bayar:</label>
+                        <input type="number" id="bayar" name="bayar" oninput="hitungSisa()">
+                    </div>
+                    <div>Sisa: <span id="sisaBayar" oninput="hitungSisa()">0</span></div>
+                </div>
