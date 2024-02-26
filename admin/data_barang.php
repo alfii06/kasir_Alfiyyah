@@ -50,14 +50,42 @@
             <hr class="sidebar-divider">
 
             <!-- Heading -->
-            <div class="sidebar-heading">
-                Interface
-            </div>
+            <div class="sidebar-heading">Transaksi</div>
+
+            <!-- Nav Item - Pembelian Barang -->
+            <li class="nav-item">
+                <a class="nav-link" href="../admin/pembelian_barang.php">
+                    <i class="fas fa-shopping-cart"></i> <!-- Mengganti kelas ikon dengan yang sesuai -->
+                    <span>Pembelian Barang</span>
+                </a>
+            </li>
+
+            <!-- Nav Item - Penjualan Barang -->
+            <li class="nav-item">
+                <a class="nav-link" href="../admin/penjualan_barang.php">
+                    <i class="fas fa-store"></i> <!-- Mengganti kelas ikon dengan yang sesuai -->
+                    <span>Penjualan Barang</span>
+                </a>
+            </li>
+
+            <!-- Nav Item - Penjualan Detail -->
+            <li class="nav-item">
+                <a class="nav-link" href="../admin/penjualan_detail.php">
+                    <i class="fas fa-list"></i> <!-- Mengganti kelas ikon dengan yang sesuai -->
+                    <span>Penjualan Detail</span>
+                </a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">Data</div>
 
             <!-- Nav Item - Data User -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="../admin/data_user.php">
-                    <i class="fas fa-fw fa-cog"></i>
+                    <i class="fas fa-user"></i>
                     <span>Data User</span>
                 </a>
             </li>
@@ -65,7 +93,7 @@
             <!-- Nav Item - Data Barang -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="../admin/data_barang.php">
-                    <i class="fas fa-fw fa-folder"></i>
+                    <i class="fas fa-archive"></i> <!-- Mengganti kelas ikon dengan yang sesuai -->
                     <span>Data Barang</span>
                 </a>
             </li>
@@ -73,45 +101,25 @@
             <!-- Nav Item - Data Pelanggan -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="../admin/data_pelanggan.php">
-                    <i class="fas fa-fw fa-wrench"></i>
+                    <i class="fas fa-users"></i> <!-- Mengganti kelas ikon dengan yang sesuai -->
                     <span>Data Pelanggan</span>
                 </a>
             </li>
 
-
             <!-- Nav Item - Data Supplier -->
             <li class="nav-item">
                 <a class="nav-link" href="../admin/data_supplier.php">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Data Supplier</span></a>
-            </li>
-
-            <!-- Nav Item - Data Supplier -->
-            <li class="nav-item">
-                <a class="nav-link" href="../admin/pembelian_barang.php">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Pembelian Barang</span></a>
-            </li>
-
-            <!-- Nav Item - Penjualan Barang -->
-            <li class="nav-item">
-                <a class="nav-link" href="../admin/penjualan_barang.php">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Penjualan Barang</span></a>
-            </li>
-            
-            <!-- Nav Item - Penjualan Detail -->
-            <li class="nav-item">
-                <a class="nav-link" href="../admin/penjualan_detail.php">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Penjualan Detail</span></a>
+                    <i class="fas fa-truck"></i> <!-- Mengganti kelas ikon dengan yang sesuai -->
+                    <span>Data Supplier</span>
+                </a>
             </li>
 
             <!-- Nav Item - Stok Barang -->
             <li class="nav-item">
                 <a class="nav-link" href="../admin/toko.php">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Toko</span></a>
+                    <i class="fas fa-cubes"></i> <!-- Mengganti kelas ikon dengan yang sesuai -->
+                    <span>Toko</span>
+                </a>
             </li>
 
             <!-- Divider -->
@@ -461,6 +469,23 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Mengambil URL halaman saat ini
+        var currentUrl = window.location.href;
+
+        // Mengambil semua elemen sidebar yang memiliki link
+        var sidebarLinks = document.querySelectorAll('.nav-link[href]');
+
+        // Iterasi melalui setiap link sidebar
+        sidebarLinks.forEach(function(link) {
+            // Jika URL saat ini cocok dengan URL link di sidebar
+            if (currentUrl === link.href) {
+                // Tambahkan kelas 'active' pada elemen li yang bersangkutan
+                link.parentNode.classList.add('active');
+            }
+        });
+    </script>
 
     <!-- Bootstrap core JavaScript-->
     <script src="../dashboard/vendor/jquery/jquery.min.js"></script>

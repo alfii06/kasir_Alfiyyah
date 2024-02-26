@@ -73,8 +73,8 @@
                 echo "<td>" . $row["harga_beli"] . "</td>";
                 echo "<td>" . $row["harga_jual"] . "</td>";
                 echo "<td>
-                        <a href='edit_penjualan_barang.php?id=" . $row["penjualan_id"] . "' class='btn btn-success btn-sm'>Edit</a>
-                        <a href='hapus_penjualan.php?id=" . $row["penjualan_id"] . "' class='btn btn-danger btn-sm' onclick=\"return confirm('Apakah Anda yakin ingin menghapus data ini?')\">Delete</a>
+                        <a href='edit_detail.php?id=" . $row["penjualan_id"] . "' class='btn btn-success btn-sm'>Edit</a>
+                        <a href='hapus_detail.php?id=" . $row["penjualan_id"] . "' class='btn btn-danger btn-sm' onclick=\"return confirm('Apakah Anda yakin ingin menghapus data ini?')\">Delete</a>
                     </td>";
                 echo "</tr>";
             }
