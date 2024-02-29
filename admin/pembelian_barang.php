@@ -68,14 +68,6 @@
                 </a>
             </li>
 
-            <!-- Nav Item - Penjualan Detail -->
-            <li class="nav-item">
-                <a class="nav-link" href="../admin/penjualan_detail.php">
-                    <i class="fas fa-list"></i> <!-- Mengganti kelas ikon dengan yang sesuai -->
-                    <span>Penjualan Detail</span>
-                </a>
-            </li>
-
             <!-- Divider -->
             <hr class="sidebar-divider">
 
