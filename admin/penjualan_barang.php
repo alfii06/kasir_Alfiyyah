@@ -267,7 +267,7 @@
                         <h2>Tambah Penjualan</h2>
 
                         <!-- Tombol untuk menampilkan form tambah penjualan -->
-                        <a href="../admin/tambah_penjualan.php"><button onclick="tambahPenjualan()" class='btn btn-primary'>Tambah Penjualan</button></a>
+                        <!-- <a href="../admin/tambah_penjualan.php"><button onclick="tambahPenjualan()" class='btn btn-primary'>Tambah Penjualan</button></a> -->
 
                         <!-- Tabel Penjualan -->
                         <table id="tabelPenjualan">

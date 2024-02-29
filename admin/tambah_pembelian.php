@@ -17,13 +17,13 @@ $pembelianToAdd = [
 ];
 
 // Ambil data toko dari database
-$sql = "SELECT nama_toko FROM toko LIMIT 1";
+$sql = "SELECT toko_id, nama_toko FROM toko";
 $result = $conn->query($sql);
+$tokoOptions = "";
 if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-    $nama_toko = $row["nama_toko"];
-} else {
-    $nama_toko = "Toko Anda"; // Default jika tidak ada data toko
+    while ($row = $result->fetch_assoc()) {
+        $tokoOptions .= "<option value='" . $row["toko_id"] . "'>" . $row["nama_toko"] . "</option>";
+    }
 }
 
 // Ambil data user dari database
@@ -229,7 +229,10 @@ $conn->close();
                 <input type="hidden" id="pembelianId" name="pembelianId" value="">
 
                 <label for="tokoId">Nama Toko:</label>
-                <input type="text" id="tokoId" name="tokoId" value="<?= $nama_toko ?>" readonly>
+                <select id="tokoId" name="tokoId" required>
+                    <option value="">Pilih Toko</option>
+                    <?= $tokoOptions ?>
+                </select>
 
                 <label for="userId">Nama User:</label>
                 <select id="userId" name="userId" required>

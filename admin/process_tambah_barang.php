@@ -5,7 +5,7 @@
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Mengambil data dari formulir POST
     $produkId = $_POST['produk_id'];
-    $tokoId = $_POST['toko_id'];
+    $tokoId = $_POST['tokoNama'];
     $namaProduk = $_POST['nama_produk'];
     $kategoriId = $_POST['kategori_id'];
     $satuan = $_POST['satuan'];
@@ -24,22 +24,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         // Query SQL untuk menyimpan data ke tabel barang
-        $query = "INSERT INTO produk (produk_id, toko_id, nama_produk, kategori_id, satuan, harga_beli, harga_jual, stok_barang, created_at)
-                  VALUES (:produkId, :tokoId, :namaProduk, :kategoriId, :satuan, :hargaBeli, :hargaJual, :stokBarang, :createdAt)";
+        $query = "INSERT INTO produk (produk_id, tokoNama, nama_produk, kategori_id, satuan, harga_beli, harga_jual, stok_barang, created_at)
+                    VALUES (:produk_id, :tokoId, :namaProduk, :kategoriId, :satuan, :hargaBeli, :hargaJual, :stokBarang, :createdAt)";
 
         // Persiapkan statement SQL
         $statement = $pdo->prepare($query);
 
         // Bind parameter ke statement
-        $statement->bindParam(':produkId', $produkId);
-        $statement->bindParam(':tokoId', $tokoId);
+        $statement->bindParam(':produk_id', $produkId);
+        $statement->bindParam(':tokoNama', $tokoId);
         $statement->bindParam(':namaProduk', $namaProduk);
         $statement->bindParam(':kategoriId', $kategoriId);
         $statement->bindParam(':satuan', $satuan);
         $statement->bindParam(':hargaBeli', $hargaBeli);
         $statement->bindParam(':hargaJual', $hargaJual);
         $statement->bindParam(':stokBarang', $stokBarang);
-        $statement->bindParam(':createdAt', $createdAt);
 
         // Eksekusi statement untuk menyimpan data
         $statement->execute();

@@ -16,11 +16,15 @@ while ($row = mysqli_fetch_assoc($result_kategori)) {
     $kategori_options .= '<option value="' . $row['kategori_id'] . '">' . $row['nama_kategori'] . '</option>';
 }
 
-// Ambil nama toko dari database (jika hanya ada satu toko)
-$query_toko = "SELECT * FROM toko LIMIT 1";
-$result_toko = mysqli_query($koneksi, $query_toko);
-$row_toko = mysqli_fetch_assoc($result_toko);
-$nama_toko = $row_toko['nama_toko'];
+// Ambil data toko dari database
+$sql = "SELECT toko_id, nama_toko FROM toko";
+$result = $koneksi->query($sql);
+$tokoOptions = "";
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $tokoOptions .= "<option value='" . $row["toko_id"] . "'>" . $row["nama_toko"] . "</option>";
+    }
+}
 
 // Tutup koneksi
 mysqli_close($koneksi);
@@ -128,9 +132,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <form id="formTambahBarang" method="post" action="process_tambah_barang.php">
 
-            <!-- Menampilkan Nama Toko -->
-            <label for="toko_id">Nama Toko:</label>
-            <input type="text" id="toko_id" name="toko_id" value="<?= $nama_toko ?>" readonly>
+            <input type="hidden" id="produkId" name="produk_id" value="">
+
+            <label for="tokoNama">Nama Toko:</label>
+            <select id="tokoNama" name="tokoNama" required>
+                <option value="">Pilih Toko</option>
+                <?= $tokoOptions ?>
+            </select>
 
             <!-- Input Nama Produk tetap menggunakan input text -->
             <label for="nama_produk">Nama Produk:</label>
@@ -139,10 +147,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <!-- Dropdown untuk Kategori ID -->
             <label for="kategori_id">Nama Kategori:</label>
             <select id="kategori_id" name="kategori_id" required>
-                <option>Pilih Kategori</option>
+                <option value="">Pilih Kategori</option>
+                <?= $kategoriDefaultOption ?>
                 <?= $kategori_options ?>
             </select>
-
             <!-- Input Satuan tetap menggunakan input text -->
             <label for="satuan">Satuan:</label>
             <input type="text" id="satuan" name="satuan" value="<?= $barangToEdit['satuan'] ?>" required>

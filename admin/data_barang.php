@@ -250,6 +250,7 @@
                                 <th>Harga Beli</th>
                                 <th>Harga Jual</th>
                                 <th>Stok Barang</th>
+                                <th>Created At</th>
                                 <th>Aksi</th>
                             </tr>
                             <!-- Static data for demonstration -->
@@ -265,13 +266,14 @@
                                 while ($row = $result->fetch_assoc()) {
                                     echo "<tr>";
                                     echo "<td>" . $row["produk_id"] . "</td>";
-                                    echo "<td>" . $row["toko_id"] . "</td>";
+                                    echo "<td>" . $row["tokoNama"] . "</td>";
                                     echo "<td>" . $row["nama_produk"] . "</td>";
                                     echo "<td>" . $row["kategori_id"] . "</td>";
                                     echo "<td>" . $row["satuan"] . "</td>";
                                     echo "<td>" . $row["harga_beli"] . "</td>";
                                     echo "<td>" . $row["harga_jual"] . "</td>";
                                     echo "<td>" . $row["stok_barang"] . "</td>";
+                                    echo "<td>" . $row["created_at"] . "</td>";
                                     echo "<td>
                                             <a href='edit_data_barang.php?id=" . $row["produk_id"] . "' class='btn btn-success btn-sm'>Edit</a>
                                             <a href='hapus_barang.php?id=" . $row["produk_id"] . "' class='btn btn-danger btn-sm' onclick=\"return confirm('Apakah Anda yakin ingin menghapus data ini?')\">Delete</a>
