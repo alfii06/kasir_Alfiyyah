@@ -36,6 +36,28 @@ $conn->close();
         th {
             background-color: #f2f2f2;
         }
+
+        .tbs {
+            margin-top: 20px;
+        }
+
+        .tbs div {
+            margin-bottom: 10px;
+        }
+
+        .tbs label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        .tbs input[type="number"] {
+            width: 150px;
+            padding: 5px;
+        }
+
+        .tbs button {
+            padding: 5px 10px;
+        }
     </style>
 </head>
 
@@ -81,6 +103,24 @@ $conn->close();
             </tr>
         </thead>
     </table>
+    <br>
+
+    <!-- Bagian bawah tabel untuk total, bayar, dan sisa -->
+    <div class="tbs">
+        <div class="total">
+            <label for="total">Total:</label>
+            <input type="number" id="totalAmount" value="0.00" readonly>
+        </div>
+        <div class="bayar">
+            <label for="bayar">Bayar:</label>
+            <input type="number" id="bayar" name="bayar">
+        </div>
+        <div class="sisa">
+            <label for="sisa">Sisa:</label>
+            <input type="number" id="sisa" name="sisa" readonly>
+        </div>
+        <button onclick="hitung()">Hitung Sisa</button>
+    </div>
 
     <script>
         var namaBarangSelect = document.getElementById("namaBarang");
