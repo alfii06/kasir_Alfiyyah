@@ -29,11 +29,11 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../dashboard/index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../petugas/index.html">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">Admin</div>
+                <div class="sidebar-brand-text mx-3">Petugas</div>
             </a>
 
             <!-- Divider -->
@@ -41,7 +41,7 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="../dashboard/index.html">
+                <a class="nav-link" href="../petugas/index.html">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -52,65 +52,33 @@
             <!-- Heading -->
             <div class="sidebar-heading">Transaksi</div>
 
-            <!-- Nav Item - Pembelian Barang -->
-            <li class="nav-item">
-                <a class="nav-link" href="../admin/pembelian_barang.php">
-                    <i class="fas fa-shopping-cart"></i> <!-- Mengganti kelas ikon dengan yang sesuai -->
-                    <span>Pembelian Barang</span>
-                </a>
-            </li>
-
             <!-- Nav Item - Penjualan Barang -->
             <li class="nav-item">
-                <a class="nav-link" href="../admin/penjualan_barang.php">
-                    <i class="fas fa-store"></i> <!-- Mengganti kelas ikon dengan yang sesuai -->
-                    <span>Penjualan Barang</span>
-                </a>
+                <a class="nav-link" href="../petugas/penjualan_barang.php">
+                    <i class="fas fa-store"></i>
+                    <span>Penjualan Barang</span></a>
             </li>
 
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">Data</div>
-
-            <!-- Nav Item - Data User -->
+            <!-- Nav Item - Penjualan Detail -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="../admin/data_user.php">
-                    <i class="fas fa-user"></i>
-                    <span>Data User</span>
-                </a>
-            </li>
-
-            <!-- Nav Item - Data Barang -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="../admin/data_barang.php">
-                    <i class="fas fa-archive"></i> <!-- Mengganti kelas ikon dengan yang sesuai -->
-                    <span>Data Barang</span>
-                </a>
-            </li>
-
-            <!-- Nav Item - Data Pelanggan -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="../admin/data_pelanggan.php">
-                    <i class="fas fa-users"></i> <!-- Mengganti kelas ikon dengan yang sesuai -->
-                    <span>Data Pelanggan</span>
+                <a class="nav-link" href="../petugas/penjualan_detail.php">
+                    <i class="fas fa-store"></i>
+                    <span>Penjualan Detail</span>
                 </a>
             </li>
 
             <!-- Nav Item - Data Supplier -->
             <li class="nav-item">
-                <a class="nav-link" href="../admin/data_supplier.php">
-                    <i class="fas fa-truck"></i> <!-- Mengganti kelas ikon dengan yang sesuai -->
-                    <span>Data Supplier</span>
-                </a>
+                <a class="nav-link" href="../petugas/pembelian_barang.php">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Pembelian Barang</span></a>
             </li>
 
-            <!-- Nav Item - Stok Barang -->
+            <!-- Nav Item - Data Pelanggan -->
             <li class="nav-item">
-                <a class="nav-link" href="../admin/toko.php">
-                    <i class="fas fa-cubes"></i> <!-- Mengganti kelas ikon dengan yang sesuai -->
-                    <span>Toko</span>
+                <a class="nav-link collapsed" href="../petugas/data_pelanggan.php">
+                    <i class="fas fa-users"></i>
+                    <span>Data Pelanggan</span>
                 </a>
             </li>
 
@@ -179,7 +147,7 @@
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Admin</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Petugas</span>
                                 <img class="img-profile rounded-circle" src="../dashboard/img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->

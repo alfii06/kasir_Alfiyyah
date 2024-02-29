@@ -55,7 +55,7 @@
             <!-- Nav Item - Pembelian Barang -->
             <li class="nav-item">
                 <a class="nav-link" href="../admin/pembelian_barang.php">
-                    <i class="fas fa-shopping-cart"></i> <!-- Mengganti kelas ikon dengan yang sesuai -->
+                    <i class="fas fa-shopping-cart"></i>
                     <span>Pembelian Barang</span>
                 </a>
             </li>
@@ -63,7 +63,7 @@
             <!-- Nav Item - Penjualan Barang -->
             <li class="nav-item">
                 <a class="nav-link" href="../admin/penjualan_barang.php">
-                    <i class="fas fa-store"></i> <!-- Mengganti kelas ikon dengan yang sesuai -->
+                    <i class="fas fa-store"></i>
                     <span>Penjualan Barang</span>
                 </a>
             </li>
@@ -85,7 +85,7 @@
             <!-- Nav Item - Data Barang -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="../admin/data_barang.php">
-                    <i class="fas fa-archive"></i> <!-- Mengganti kelas ikon dengan yang sesuai -->
+                    <i class="fas fa-archive"></i>
                     <span>Data Barang</span>
                 </a>
             </li>
@@ -93,7 +93,7 @@
             <!-- Nav Item - Data Pelanggan -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="../admin/data_pelanggan.php">
-                    <i class="fas fa-users"></i> <!-- Mengganti kelas ikon dengan yang sesuai -->
+                    <i class="fas fa-users"></i>
                     <span>Data Pelanggan</span>
                 </a>
             </li>
@@ -101,7 +101,7 @@
             <!-- Nav Item - Data Supplier -->
             <li class="nav-item">
                 <a class="nav-link" href="../admin/data_supplier.php">
-                    <i class="fas fa-truck"></i> <!-- Mengganti kelas ikon dengan yang sesuai -->
+                    <i class="fas fa-truck"></i>
                     <span>Data Supplier</span>
                 </a>
             </li>
@@ -109,7 +109,7 @@
             <!-- Nav Item - Stok Barang -->
             <li class="nav-item">
                 <a class="nav-link" href="../admin/toko.php">
-                    <i class="fas fa-cubes"></i> <!-- Mengganti kelas ikon dengan yang sesuai -->
+                    <i class="fas fa-cubes"></i>
                     <span>Toko</span>
                 </a>
             </li>

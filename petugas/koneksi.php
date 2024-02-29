@@ -15,5 +15,4 @@ if ($conn->connect_error) {
     echo "Koneksi berhasil!";
 }
 
-// Anda bisa menambahkan kode tambahan di sini sesuai kebutuhan
 ?>
