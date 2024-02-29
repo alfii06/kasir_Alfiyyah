@@ -249,7 +249,7 @@
 
                         <table id="tabelPembelian">
                             <tr>
-                                <th>Pembelian ID</th>
+                                <th>ID</th>
                                 <th>Nama Toko</th>
                                 <th>Nama User</th>
                                 <th>No Faktur</th>

@@ -17,13 +17,13 @@ $pembelianToAdd = [
 ];
 
 // Ambil data toko dari database
-$sql = "SELECT toko_id, nama_toko FROM toko";
+$sql = "SELECT nama_toko FROM toko LIMIT 1";
 $result = $conn->query($sql);
-$tokoOptions = "";
 if ($result->num_rows > 0) {
-    while($row = $result->fetch_assoc()) {
-        $tokoOptions .= "<option value='" . $row["toko_id"] . "'>" . $row["nama_toko"] . "</option>";
-    }
+    $row = $result->fetch_assoc();
+    $nama_toko = $row["nama_toko"];
+} else {
+    $nama_toko = "Toko Anda"; // Default jika tidak ada data toko
 }
 
 // Ambil data user dari database
@@ -31,7 +31,7 @@ $sql = "SELECT user_id, username FROM user";
 $result = $conn->query($sql);
 $userOptions = "";
 if ($result->num_rows > 0) {
-    while($row = $result->fetch_assoc()) {
+    while ($row = $result->fetch_assoc()) {
         $userOptions .= "<option value='" . $row["user_id"] . "'>" . $row["username"] . "</option>";
     }
 }
@@ -41,7 +41,7 @@ $sql = "SELECT suplier_id, nama_suplier FROM suplier";
 $result = $conn->query($sql);
 $supplierOptions = "";
 if ($result->num_rows > 0) {
-    while($row = $result->fetch_assoc()) {
+    while ($row = $result->fetch_assoc()) {
         $supplierOptions .= "<option value='" . $row["suplier_id"] . "'>" . $row["nama_suplier"] . "</option>";
     }
 }
@@ -229,14 +229,12 @@ $conn->close();
                 <input type="hidden" id="pembelianId" name="pembelianId" value="">
 
                 <label for="tokoId">Nama Toko:</label>
-                <select id="tokoId" name="tokoId" required>
-                    <option value="">Pilih Toko</option>
-                    <?= $tokoOptions ?>
-                </select>
+                <input type="text" id="tokoId" name="tokoId" value="<?= $nama_toko ?>" readonly>
 
                 <label for="userId">Nama User:</label>
                 <select id="userId" name="userId" required>
-                    <option value='<?= $_SESSION['user_id']?>'><?= $_SESSION['username']?></option>
+                    <option value="">Pilih User</option>
+                    <?= $userOptions ?>
                 </select>
 
                 <label for="noFaktur">No Faktur:</label>
@@ -276,38 +274,56 @@ $conn->close();
         <!-- Container untuk menampilkan tabel produk -->
         <div id="productTableContainer">
             <h3>Daftar Produk</h3>
+            <!-- Tabel Produk -->
             <table id="productTable">
                 <thead>
                     <tr>
-                        <th>Nama Produk</th>
-                        <th>Harga</th>
-                        <th>Qty</th>
+                        <th>Nama Alat Tulis Kantor</th>
+                        <th>Harga Satuan</th>
+                        <th>Jumlah</th>
                         <th>Pilih</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Ekonomi</td>
-                        <td>Rp. 20.000</td>
-                        <td><input type="number" id="qtyEkonomi" name="qtyEkonomi" min="0" style="width:60px;" oninput="hitungSisa()"></td>
-                        <td><input type="checkbox" class="selectProduct" id="chkEkonomi" name="selectProduct[]" value="Ekonomi" onchange="updateQty(this)"></td>
+                        <td>Pensil</td>
+                        <td>Rp. 5.000</td>
+                        <td><input type="number" id="qtyPensil" name="qtyPensil" min="0" style="width:60px;" oninput="hitungSisa()"></td>
+                        <td><input type="checkbox" class="selectProduct" id="chkPensil" name="selectProduct[]" value="Pensil" onchange="updateQty(this)"></td>
                     </tr>
                     <tr>
-                        <td>Kopi</td>
-                        <td>Rp. 25.000</td>
-                        <td><input type="number" id="qtyKopi" name="qtyKopi" min="0" style="width:60px;" oninput="hitungSisa()"></td>
-                        <td><input type="checkbox" class="selectProduct" id="chkKopi" name="selectProduct[]" value="Kopi" onchange="updateQty(this)"></td>
+                        <td>Bolpoin</td>
+                        <td>Rp. 2.500</td>
+                        <td><input type="number" id="qtyBolpoin" name="qtyBolpoin" min="0" style="width:60px;" oninput="hitungSisa()"></td>
+                        <td><input type="checkbox" class="selectProduct" id="chkBolpoin" name="selectProduct[]" value="Bolpoin" onchange="updateQty(this)"></td>
                     </tr>
                     <tr>
-                        <td>Nabati</td>
-                        <td>Rp. 20.000</td>
-                        <td><input type="number" id="qtyNabati" name="qtyNabati" min="0" style="width:60px;" oninput="hitungSisa()"></td>
-                        <td><input type="checkbox" class="selectProduct" id="chkNabati" name="selectProduct[]" value="Nabati" onchange="updateQty(this)"></td>
+                        <td>Penghapus</td>
+                        <td>Rp. 2.000</td>
+                        <td><input type="number" id="qtyPenghapus" name="qtyPenghapus" min="0" style="width:60px;" oninput="hitungSisa()"></td>
+                        <td><input type="checkbox" class="selectProduct" id="chkPenghapus" name="selectProduct[]" value="Penghapus" onchange="updateQty(this)"></td>
+                    </tr>
+                    <tr>
+                        <td>Penggaris</td>
+                        <td>Rp. 2.000</td>
+                        <td><input type="number" id="qtyPenggaris" name="qtyPenggaris" min="0" style="width:60px;" oninput="hitungSisa()"></td>
+                        <td><input type="checkbox" class="selectProduct" id="chkPenggaris" name="selectProduct[]" value="Penggaris" onchange="updateQty(this)"></td>
+                    </tr>
+                    <tr>
+                        <td>Pulpen</td>
+                        <td>Rp. 3.000</td>
+                        <td><input type="number" id="qtyPulpen" name="qtyPulpen" min="0" style="width:60px;" oninput="hitungSisa()"></td>
+                        <td><input type="checkbox" class="selectProduct" id="chkPulpen" name="selectProduct[]" value="Pulpen" onchange="updateQty(this)"></td>
+                    </tr>
+                    <tr>
+                        <td>Lem</td>
+                        <td>Rp. 2.500</td>
+                        <td><input type="number" id="qtyLem" name="qtyLem" min="0" style="width:60px;" oninput="hitungSisa()"></td>
+                        <td><input type="checkbox" class="selectProduct" id="chkLem" name="selectProduct[]" value="Lem" onchange="updateQty(this)"></td>
                     </tr>
                 </tbody>
             </table>
             <br>
-            
         </div>
     </div>
 
@@ -316,7 +332,7 @@ $conn->close();
         function updateTotal() {
             let total = 0;
             const checkboxes = document.querySelectorAll('.selectProduct:checked');
-            checkboxes.forEach(function (checkbox) {
+            checkboxes.forEach(function(checkbox) {
                 const productName = checkbox.value;
                 const qty = parseFloat(document.getElementById('qty' + productName).value) || 0;
                 const harga = getProductPrice(productName); // Panggil fungsi getProductPrice() untuk mendapatkan harga produk
@@ -329,19 +345,24 @@ $conn->close();
 
         // Fungsi untuk memformat angka sebagai mata uang (Rp. 20,000.00)
         function formatCurrency(amount) {
-            return 'Rp. ' + amount.toLocaleString('id-ID', { minimumFractionDigits: 2 });
+            return 'Rp. ' + amount.toLocaleString('id-ID', {
+                minimumFractionDigits: 2
+            });
         }
 
-        // Fungsi untuk mendapatkan harga produk berdasarkan namanya
         function getProductPrice(productName) {
-            // Harga barang (di sini diimplementasikan secara statis, Anda dapat memodifikasi agar sesuai dengan kebutuhan Anda)
-            const hargaBarang = {
-                "Ekonomi": 20000,
-                "Kopi": 25000,
-                "Nabati": 20000
+            const hargaAlatTulis = {
+                "Pensil": 5000,
+                "Bolpoin": 2500,
+                "Penghapus": 2000,
+                "Penggaris": 2000,
+                "Buku Tulis Kecil": 5000,
+                "Buku Tulis Besar": 8000,
+                "Pulpen": 3000,
+                "Lem": 2500
             };
 
-            return hargaBarang[productName] || 0; // Kembalikan harga produk, jika tidak ada, kembalikan 0
+            return hargaAlatTulis[productName] || 0;
         }
 
         // Fungsi untuk menghitung sisa pembayaran dan memperbarui input tersembunyi
@@ -353,7 +374,9 @@ $conn->close();
             const bayar = parseFloat(bayarValue) || 0;
             const sisa = bayar - total;
             document.getElementById('sisa').value = sisa; // Perbarui nilai input tersembunyi sisa
-            document.getElementById('sisaBayar').textContent = isNaN(sisa) ? 'Rp. 0,00' : (sisa >= 0 ? 'Rp. ' + sisa.toLocaleString('id-ID', { minimumFractionDigits: 2 }) : 'Rp. 0,00');
+            document.getElementById('sisaBayar').textContent = isNaN(sisa) ? 'Rp. 0,00' : (sisa >= 0 ? 'Rp. ' + sisa.toLocaleString('id-ID', {
+                minimumFractionDigits: 2
+            }) : 'Rp. 0,00');
         }
 
         // Fungsi untuk memperbarui checkbox dan menghitung total saat jumlah barang diubah
@@ -365,33 +388,32 @@ $conn->close();
             hitungSisa();
         }
 
-        // Fungsi untuk memperbarui jumlah barang dan menghitung total saat checkbox diubah
+        // Tambahkan event listener untuk setiap checkbox
+        const checkboxes = document.querySelectorAll('.selectProduct');
+        checkboxes.forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                updateQty(this); // Panggil updateQty() saat checkbox diubah
+            });
+        });
+
+        // Fungsi untuk memperbarui jumlah barang dan checkbox terkait
         function updateQty(element) {
             const productName = element.value;
             const qtyInput = document.getElementById('qty' + productName);
             qtyInput.value = element.checked ? 1 : 0;
-            updateCheckbox(element, productName); // Perbarui checkbox saat jumlah barang diubah
-            hitungSisa();
+            updateCheckbox(element, productName); // Perbarui checkbox terkait
+            hitungSisa(); // Hitung kembali total dan sisa pembayaran
         }
 
-
-        // Tambahkan event listener untuk checkbox dan input jumlah barang
-        const checkboxes = document.querySelectorAll('.selectProduct');
-        checkboxes.forEach(function (checkbox) {
-            checkbox.addEventListener('change', function () {
-                updateQty(this);
-            });
-        });
-
         const qtyInputs = document.querySelectorAll('input[type="number"]');
-        qtyInputs.forEach(function (input) {
-            input.addEventListener('input', function () {
+        qtyInputs.forEach(function(input) {
+            input.addEventListener('input', function() {
                 updateCheckbox(this, input.id.replace('qty', ''));
             });
         });
 
         // Panggil hitungSisa() untuk menginisialisasi total saat halaman dimuat
-        window.onload = function () {
+        window.onload = function() {
             hitungSisa();
             updateTotal();
         };
@@ -400,7 +422,7 @@ $conn->close();
         function selesaiPembelian() {
             // Hitung total
             const total = updateTotal();
-            
+
             // Dapatkan nilai bayar dari input
             const bayarInput = document.getElementById('bayar');
             const bayar = parseFloat(bayarInput.value) || 0; // tambahkan || 0 untuk menangani input yang kosong
@@ -425,7 +447,6 @@ $conn->close();
                 alert('Mohon masukkan jumlah barang yang dibeli.');
             }
         }
-
     </script>
 </body>
 

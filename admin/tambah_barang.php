@@ -16,13 +16,11 @@ while ($row = mysqli_fetch_assoc($result_kategori)) {
     $kategori_options .= '<option value="' . $row['kategori_id'] . '">' . $row['nama_kategori'] . '</option>';
 }
 
-// Ambil data toko dari database
-$query_toko = "SELECT * FROM toko";
+// Ambil nama toko dari database (jika hanya ada satu toko)
+$query_toko = "SELECT * FROM toko LIMIT 1";
 $result_toko = mysqli_query($koneksi, $query_toko);
-$toko_options = '';
-while ($row = mysqli_fetch_assoc($result_toko)) {
-    $toko_options .= '<option value="' . $row['toko_id'] . '">' . $row['nama_toko'] . '</option>';
-}
+$row_toko = mysqli_fetch_assoc($result_toko);
+$nama_toko = $row_toko['nama_toko'];
 
 // Tutup koneksi
 mysqli_close($koneksi);
@@ -130,12 +128,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <form id="formTambahBarang" method="post" action="process_tambah_barang.php">
 
-            <!-- Dropdown untuk Toko ID -->
+            <!-- Menampilkan Nama Toko -->
             <label for="toko_id">Nama Toko:</label>
-            <select id="toko_id" name="toko_id" required>
-                <option>Pilih Toko</option>
-                <?= $toko_options ?>
-            </select>
+            <input type="text" id="toko_id" name="toko_id" value="<?= $nama_toko ?>" readonly>
 
             <!-- Input Nama Produk tetap menggunakan input text -->
             <label for="nama_produk">Nama Produk:</label>
