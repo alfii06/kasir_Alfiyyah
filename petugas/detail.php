@@ -9,6 +9,10 @@ $resultKategori = $conn->query($sqlKategori);
 $sqlProduk = "SELECT * FROM produk";
 $resultProduk = $conn->query($sqlProduk);
 
+// Query untuk mengambil data detail penjualan
+$sql = "SELECT * FROM penjualan_detail";
+$result = $conn->query($sql);
+
 // Tutup koneksi database
 $conn->close();
 ?>
@@ -58,6 +62,12 @@ $conn->close();
         .tbs button {
             padding: 5px 10px;
         }
+
+        .no-data {
+            display: none;
+            color: red;
+            margin-top: 10px;
+        }
     </style>
 </head>
 
@@ -75,12 +85,12 @@ $conn->close();
         ?>
     </select>
     <select id="namaBarang">
-        <option value="">Pilih Nama Barang</option>
+        <option value="" data-kategori="">Pilih Nama Barang</option>
         <?php
         // Memuat pilihan nama barang dari database
         if ($resultProduk->num_rows > 0) {
             while ($row = $resultProduk->fetch_assoc()) {
-                echo "<option value='" . $row["produk_id"] . "' data-harga='" . $row["harga_jual"] . "'>" . $row["nama_produk"] . "</option>";
+                echo "<option value='" . $row["produk_id"] . "' data-harga='" . $row["harga_jual"] . "' data-kategori='" . $row["kategori_id"] . "'>" . $row["nama_produk"] . "</option>";
             }
         }
         ?>
@@ -102,8 +112,25 @@ $conn->close();
                 <th>Jumlah</th>
             </tr>
         </thead>
+        <tbody>
+            <?php
+            // Jika ada data yang dikembalikan dari query, tampilkan dalam tabel
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    echo "<tr>";
+                    echo "<td>" . $row["produk_id"] . "</td>";
+                    echo "<td>" . $row["qty"] . "</td>";
+                    echo "<td>" . $row["harga_beli"] . "</td>";
+                    echo "<td>" . $row["harga_jual"] . "</td>";
+                    echo "</tr>";
+                }
+            } else {
+                // Jika tidak ada data yang dikembalikan dari query, tampilkan pesan
+                echo "<tr class='no-data'><td colspan='6'>Tidak ada data detail penjualan.</td></tr>";
+            }
+            ?>
+        </tbody>
     </table>
-    <br>
 
     <!-- Bagian bawah tabel untuk total, bayar, dan sisa -->
     <div class="tbs">
@@ -113,7 +140,7 @@ $conn->close();
         </div>
         <div class="bayar">
             <label for="bayar">Bayar:</label>
-            <input type="number" id="bayar" name="bayar">
+            <input type="number" id="bayarInput" name="bayar">
         </div>
         <div class="sisa">
             <label for="sisa">Sisa:</label>
@@ -125,6 +152,12 @@ $conn->close();
     <script>
         var namaBarangSelect = document.getElementById("namaBarang");
         var hargaInput = document.getElementById("harga");
+        var totalAmountInput = document.getElementById("totalAmount");
+        var tabelPenjualan = document.getElementById("tabelPenjualan").getElementsByTagName('tbody')[0];
+        var noDataMessage = document.querySelector('.no-data');
+
+        // Array untuk menyimpan data barang yang dibeli
+        var purchasedItems = [];
 
         // Menampilkan harga berdasarkan pilihan nama barang
         namaBarangSelect.addEventListener("change", function() {
@@ -139,8 +172,16 @@ $conn->close();
             var qty = parseInt(document.getElementById("qty").value);
             var jumlah = harga * qty;
 
-            var table = document.getElementById("tabelPenjualan").getElementsByTagName('tbody')[0];
-            var newRow = table.insertRow();
+            // Menambahkan barang yang dibeli ke dalam array purchasedItems
+            purchasedItems.push({
+                nama: namaBarang,
+                harga: harga,
+                qty: qty,
+                jumlah: jumlah
+            });
+
+            // Menampilkan barang yang dibeli ke dalam tabel
+            var newRow = tabelPenjualan.insertRow();
             var cellNo = newRow.insertCell(0);
             var cellIDPenjualan = newRow.insertCell(1);
             var cellNamaBarang = newRow.insertCell(2);
@@ -148,12 +189,21 @@ $conn->close();
             var cellQty = newRow.insertCell(4);
             var cellJumlah = newRow.insertCell(5);
 
-            cellNo.innerHTML = table.rows.length;
+            cellNo.innerHTML = tabelPenjualan.rows.length;
             cellIDPenjualan.innerHTML = Math.floor(Math.random() * 10000) + 1; // ID Penjualan secara acak
             cellNamaBarang.innerHTML = namaBarang;
             cellHargaJual.innerHTML = harga;
             cellQty.innerHTML = qty;
             cellJumlah.innerHTML = jumlah;
+
+            // Menghitung total jumlah pembelian dan memperbarui input total
+            var totalAmount = purchasedItems.reduce(function(total, item) {
+                return total + item.jumlah;
+            }, 0);
+            totalAmountInput.value = totalAmount.toFixed(2);
+
+            // Sembunyikan pesan "Tidak ada data detail penjualan" jika sudah ada data
+            noDataMessage.style.display = 'none';
         }
 
         function inputBayar() {
@@ -165,6 +215,23 @@ $conn->close();
             // Implementasi fungsi hitung
             alert("Fungsi hitung belum diimplementasikan");
         }
+
+        // Memfilter opsi nama barang berdasarkan kategori yang dipilih
+        document.getElementById('kategori').addEventListener('change', function() {
+            var selectedCategoryId = this.value;
+            var namaBarangOptions = document.getElementById('namaBarang').getElementsByTagName('option');
+
+            for (var i = 0; i < namaBarangOptions.length; i++) {
+                var option = namaBarangOptions[i];
+                var optionCategoryId = option.getAttribute('data-kategori');
+
+                if (selectedCategoryId === optionCategoryId || selectedCategoryId === '') {
+                    option.style.display = 'block'; // Tampilkan opsi jika kategori cocok atau tidak ada kategori yang dipilih
+                } else {
+                    option.style.display = 'none'; // Sembunyikan opsi jika kategori tidak cocok
+                }
+            }
+        });
     </script>
 
 </body>
