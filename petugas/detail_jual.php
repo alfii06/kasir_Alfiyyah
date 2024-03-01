@@ -129,6 +129,7 @@
 
     <script>
         var idPenjualan = 1; // ID penjualan akan dimulai dari 1
+        var totalAmount = 0; // Total keseluruhan
 
         function updateHarga() {
             var selectedOption = document.getElementById("nama_produk").options[document.getElementById("nama_produk").selectedIndex];
@@ -167,6 +168,10 @@
             cellHargaJual.innerHTML = hargaJual; // Harga jual
             cellQty.innerHTML = qty; // Qty
             cellJumlah.innerHTML = total; // Total
+
+            // Menambahkan total pada totalAmount
+            totalAmount += total;
+            document.getElementById("totalAmount").value = totalAmount;
 
             // Menghitung total keseluruhan
             updateTotal();
