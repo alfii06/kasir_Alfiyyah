@@ -92,6 +92,11 @@
         <div class="input-field">
             <button type="button" onclick="saveData()">Simpan</button>
         </div>
+        <div class="input-field">
+            <label for="bayar">Bayar:</label>
+            <input type="number" id="bayarInput" name="bayar">
+            <button type="button" onclick="bayar()">Bayar</button>
+        </div>
     </div>
 
     <table id="tabelPenjualan">
@@ -143,6 +148,18 @@
             document.getElementById("harga_jual").value = hargaJual; // Harga tetap sama, tidak perlu ditambah qty
         }
 
+        // Fungsi untuk menangani perubahan total dan penyimpanan ke localStorage
+        function updateTotalAndLocalStorage() {
+            var total = 0;
+            var tableRows = document.getElementById("tabelPenjualan").getElementsByTagName("tbody")[0].rows;
+            for (var i = 0; i < tableRows.length; i++) {
+                total += parseFloat(tableRows[i].cells[5].innerHTML);
+            }
+            totalAmount = total;
+            document.getElementById("totalAmount").value = total.toFixed(2);
+            localStorage.setItem("totalAmount", total.toFixed(2)); // Simpan total ke localStorage
+        }
+
         function saveData() {
             // Mendapatkan nilai dari semua input
             var namaProduk = document.getElementById("nama_produk").options[document.getElementById("nama_produk").selectedIndex].text;
@@ -173,19 +190,58 @@
             totalAmount += total;
             document.getElementById("totalAmount").value = totalAmount;
 
-            // Menghitung total keseluruhan
-            updateTotal();
+            // Menyimpan data tabel penjualan ke localStorage
+            saveToLocalStorage();
+
+            // Memperbarui localStorage setiap kali ada perubahan
+            updateTotalAndLocalStorage();
+        }
+
+        // Fungsi untuk menangani pembayaran
+        function bayar() {
+            var total = parseFloat(document.getElementById("totalAmount").value);
+            var bayar = parseFloat(document.getElementById("bayarInput").value);
+
+            // Periksa apakah jumlah pembayaran mencukupi
+            if (bayar >= total) {
+                var sisa = bayar - total;
+                document.getElementById("sisa").value = sisa.toFixed(2);
+                alert("Pembayaran berhasil. Sisa: " + sisa.toFixed(2));
+
+                // Simpan nilai pembayaran ke dalam localStorage
+                localStorage.setItem("bayar", bayar);
+            } else {
+                alert("Jumlah pembayaran kurang.");
+            }
+
+            // Memperbarui localStorage setiap kali ada perubahan
+            updateTotalAndLocalStorage();
+        }
+
+        function saveToLocalStorage() {
+            var tableData = [];
+            var tableRows = document.getElementById("tabelPenjualan").rows;
+            for (var i = 1; i < tableRows.length; i++) { // Mulai dari 1 untuk melewati baris judul
+                var rowData = [];
+                for (var j = 0; j < tableRows[i].cells.length; j++) {
+                    rowData.push(tableRows[i].cells[j].innerHTML);
+                }
+                tableData.push(rowData);
+            }
+            localStorage.setItem("tabelPenjualan", JSON.stringify(tableData));
         }
 
         document.addEventListener("DOMContentLoaded", function() {
-            // Menambahkan event listener ke dropdown produk
-            document.getElementById("nama_produk").addEventListener("change", function() {
-                var selectedOption = this.options[this.selectedIndex];
-                var hargaJual = parseInt(selectedOption.getAttribute("data-harga-jual"));
-                document.getElementById("qty").value = 1; // Set qty menjadi 1
-                document.getElementById("harga_jual").value = hargaJual; // Set harga jual sesuai dengan produk yang dipilih
-                updateTotal(); // Panggil fungsi updateTotal untuk menghitung jumlah total
-            });
+            // Cek apakah ada nilai pembayaran yang tersimpan di localStorage
+            var storedBayar = localStorage.getItem("bayar");
+            if (storedBayar) {
+                document.getElementById("bayarInput").value = storedBayar;
+            }
+        });
+
+        window.addEventListener("beforeunload", function() {
+            // Simpan data tabel penjualan ke localStorage sebelum halaman dimuat ulang
+            saveToLocalStorage();
         });
     </script>
 
