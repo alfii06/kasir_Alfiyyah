@@ -100,7 +100,7 @@
                 <th>No</th>
                 <th>ID Penjualan</th>
                 <th>Nama Barang</th>
-                <th>Harga Jual</th>
+                <th>Harga</th>
                 <th>Qty</th>
                 <th>Jumlah</th>
             </tr>
@@ -128,6 +128,8 @@
     </div>
 
     <script>
+        var idPenjualan = 1; // ID penjualan akan dimulai dari 1
+
         function updateHarga() {
             var selectedOption = document.getElementById("nama_produk").options[document.getElementById("nama_produk").selectedIndex];
             var hargaJual = parseInt(selectedOption.getAttribute("data-harga-jual"));
@@ -137,42 +139,49 @@
         function updateTotal() {
             var qty = parseInt(document.getElementById("qty").value);
             var hargaJual = parseInt(document.getElementById("harga_jual").value);
-            document.getElementById("harga_jual").value = hargaJual * qty;
+            document.getElementById("harga_jual").value = hargaJual; // Harga tetap sama, tidak perlu ditambah qty
         }
 
         function saveData() {
             // Mendapatkan nilai dari semua input
-            var penjualan_id = <?php echo isset($_GET['id']) ? $_GET['id'] : '0'; ?>;
-            var nama_pelanggan = document.getElementById("nama_pelanggan").value;
-            var produk = document.getElementById("nama_produk").value;
-            var qty = document.getElementById("qty").value;
-            var harga_beli = document.getElementById("harga_beli").value;
-            var harga_jual = document.getElementById("harga_jual").value;
+            var namaProduk = document.getElementById("nama_produk").options[document.getElementById("nama_produk").selectedIndex].text;
+            var qty = parseInt(document.getElementById("qty").value);
+            var hargaJual = parseInt(document.getElementById("harga_jual").value);
+            var total = hargaJual * qty; // Menghitung harga jual dikalikan dengan qty
 
-            // Mengirim data ke halaman process_detail_penjualan.php menggunakan AJAX
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "process_detail_penjualan.php", true);
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    // Menampilkan pesan atau melakukan tindakan setelah penyimpanan data berhasil
-                    alert(xhr.responseText); // Misalnya, menampilkan pesan dari server
-                }
-            };
-            xhr.send("penjualan_id=" + penjualan_id + "&nama_pelanggan=" + nama_pelanggan + "&produk=" + produk + "&qty=" + qty + "&harga_beli=" + harga_beli + "&harga_jual=" + harga_jual);
+            // Membuat baris baru untuk tabel penjualan
+            var table = document.getElementById("tabelPenjualan").getElementsByTagName("tbody")[0];
+            var newRow = table.insertRow(-1); // -1 untuk menyisipkan di akhir tabel
+
+            // Mengisi data ke dalam baris baru
+            var cellNumber = newRow.insertCell(0);
+            var cellIdPenjualan = newRow.insertCell(1);
+            var cellNamaBarang = newRow.insertCell(2);
+            var cellHargaJual = newRow.insertCell(3);
+            var cellQty = newRow.insertCell(4);
+            var cellJumlah = newRow.insertCell(5);
+
+            cellNumber.innerHTML = table.rows.length; // Nomor urutan baris dimulai dari 1
+            cellIdPenjualan.innerHTML = idPenjualan++; // Menambahkan ID penjualan dan meningkatkan nilai untuk ID penjualan berikutnya
+            cellNamaBarang.innerHTML = namaProduk; // Nama produk
+            cellHargaJual.innerHTML = hargaJual; // Harga jual
+            cellQty.innerHTML = qty; // Qty
+            cellJumlah.innerHTML = total; // Total
+
+            // Menghitung total keseluruhan
+            updateTotal();
         }
 
-
         document.addEventListener("DOMContentLoaded", function() {
-        // Menambahkan event listener ke dropdown produk
-        document.getElementById("nama_produk").addEventListener("change", function() {
-            var selectedOption = this.options[this.selectedIndex];
-            var hargaJual = parseInt(selectedOption.getAttribute("data-harga-jual"));
-            document.getElementById("qty").value = 1; // Set qty menjadi 1
-            document.getElementById("harga_jual").value = hargaJual; // Set harga jual sesuai dengan produk yang dipilih
-            updateTotal(); // Panggil fungsi updateTotal untuk menghitung jumlah total
+            // Menambahkan event listener ke dropdown produk
+            document.getElementById("nama_produk").addEventListener("change", function() {
+                var selectedOption = this.options[this.selectedIndex];
+                var hargaJual = parseInt(selectedOption.getAttribute("data-harga-jual"));
+                document.getElementById("qty").value = 1; // Set qty menjadi 1
+                document.getElementById("harga_jual").value = hargaJual; // Set harga jual sesuai dengan produk yang dipilih
+                updateTotal(); // Panggil fungsi updateTotal untuk menghitung jumlah total
+            });
         });
-    });
     </script>
 
 </body>
