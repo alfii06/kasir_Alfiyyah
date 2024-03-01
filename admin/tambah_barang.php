@@ -135,7 +135,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="hidden" id="produkId" name="produk_id" value="">
 
             <label for="tokoNama">Nama Toko:</label>
-            <select id="tokoNama" name="tokoNama" required>
+            <select id="toko_id" name="toko_id" required>
                 <option value="">Pilih Toko</option>
                 <?= $tokoOptions ?>
             </select>

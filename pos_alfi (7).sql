@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 21, 2024 at 01:55 AM
+-- Generation Time: Mar 01, 2024 at 06:08 AM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 7.4.27
 
@@ -170,8 +170,11 @@ CREATE TABLE `produk` (
 --
 
 INSERT INTO `produk` (`produk_id`, `toko_id`, `nama_produk`, `kategori_id`, `satuan`, `harga_beli`, `harga_jual`, `stok_barang`, `created_at`) VALUES
-(1, 1, 'Ekonomi', 1, '1 ', '2000', '2500', '10', 0),
-(7, 1, 'Tejus gulbat', 3, '1 renceng', '12000', '13000', '', 2024);
+(13, 1, 'Pensil', 3, 'pcs', '4.000', '5.000', '50', 2024),
+(14, 1, 'Pulpen', 4, 'pcs', '2000', '3.000', '35', 2024),
+(15, 1, 'Lem', 5, 'pcs', '2000', '3.000', '20', 2024),
+(16, 1, 'Penggaris', 2, 'pcs', '3000', '4000', '60', 2024),
+(17, 1, 'Buku Gambar', 1, 'pcs', '4000', '4500', '75', 2024);
 
 -- --------------------------------------------------------
 
@@ -190,9 +193,11 @@ CREATE TABLE `produk_kategori` (
 --
 
 INSERT INTO `produk_kategori` (`kategori_id`, `nama_kategori`, `created_at`) VALUES
-(1, 'sabun', '2024-02-19 07:56:48'),
-(2, 'sembako', '2024-02-19 07:57:06'),
-(3, 'minuman sachet', '2024-02-20 10:01:32');
+(1, 'buku', '2024-03-01 03:10:47'),
+(2, 'penggaris', '2024-03-01 03:11:04'),
+(3, 'pensil', '2024-03-01 03:11:28'),
+(4, 'pulpen', '2024-03-01 03:11:46'),
+(5, 'lem', '2024-03-01 03:12:03');
 
 -- --------------------------------------------------------
 
@@ -395,13 +400,13 @@ ALTER TABLE `penjualan_detail`
 -- AUTO_INCREMENT for table `produk`
 --
 ALTER TABLE `produk`
-  MODIFY `produk_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `produk_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `produk_kategori`
 --
 ALTER TABLE `produk_kategori`
-  MODIFY `kategori_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `kategori_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `suplier`

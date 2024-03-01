@@ -266,7 +266,7 @@
                                 while ($row = $result->fetch_assoc()) {
                                     echo "<tr>";
                                     echo "<td>" . $row["produk_id"] . "</td>";
-                                    echo "<td>" . $row["tokoNama"] . "</td>";
+                                    echo "<td>" . $row["toko_id"] . "</td>";
                                     echo "<td>" . $row["nama_produk"] . "</td>";
                                     echo "<td>" . $row["kategori_id"] . "</td>";
                                     echo "<td>" . $row["satuan"] . "</td>";
